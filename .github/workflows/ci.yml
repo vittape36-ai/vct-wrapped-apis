@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20, 22]
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+        env:
+          NODE_ENV: test
+          PORT: 4000
+          REDIS_URL: redis://localhost:6379
+          VCT_MASTER_KEY: test-key-ci-only
+          OPENAI_API_KEYS: sk-test-fake-key
+          GEMINI_API_KEYS: gem-test-fake-key
+          LLM_PRIMARY_PROVIDER: openai
+          RAZORPAY_KEY_ID: rzp_test_fake
+          RAZORPAY_KEY_SECRET: fake_secret
+          RAZORPAY_WEBHOOK_SECRET: whsec_fake
+          FIREBASE_PROJECT_ID: test-project
+          CLOUDINARY_CLOUD_NAME: test-cloud
+          CLOUDINARY_API_KEY: fake-key
+          CLOUDINARY_API_SECRET: fake-secret
+          RESEND_API_KEY: re_fake_key
+          MAIL_FROM: test@vidya.tech
+          MAPPLS_CLIENT_ID: fake-client
+          MAPPLS_CLIENT_SECRET: fake-secret

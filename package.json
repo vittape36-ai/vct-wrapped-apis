@@ -1,0 +1,62 @@
+{
+  "name": "vct-wrapped-apis",
+  "version": "0.1.0",
+  "description": "Production-ready API wrappers by Vidya Coddle Tech — LLM, Payments, Firebase, CDN, Mail, Geo. One SDK, six services, ship Day 1.",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src/ tests/",
+    "lint:fix": "eslint src/ tests/ --fix"
+  },
+  "keywords": [
+    "api",
+    "wrapper",
+    "openai",
+    "gemini",
+    "razorpay",
+    "firebase",
+    "cloudinary",
+    "resend",
+    "mapmyindia",
+    "vct",
+    "vidya-coddle-tech"
+  ],
+  "author": "Vidya Coddle Tech <dev@vidya.tech>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ManasTripathi07/vct-wrapped-apis.git"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4",
+    "dotenv": "^16.4.5",
+    "ioredis": "^5.4.1",
+    "express-rate-limit": "^7.4.0",
+    "rate-limit-redis": "^4.2.0",
+    "openai": "^4.67.0",
+    "@google/generative-ai": "^0.21.0",
+    "razorpay": "^2.9.4",
+    "firebase-admin": "^12.6.0",
+    "cloudinary": "^2.5.0",
+    "resend": "^4.0.0",
+    "uuid": "^10.0.0",
+    "winston": "^3.14.0",
+    "joi": "^17.13.0"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.0",
+    "supertest": "^7.0.0",
+    "eslint": "^9.12.0"
+  }
+}
