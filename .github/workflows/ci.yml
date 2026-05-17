@@ -57,6 +57,6 @@ jobs:
           CLOUDINARY_API_KEY: fake-key
           CLOUDINARY_API_SECRET: fake-secret
           RESEND_API_KEY: re_fake_key
-          MAIL_FROM: test@vidya.tech
+          MAIL_FROM: test@vidyacoddle.tech
           MAPPLS_CLIENT_ID: fake-client
           MAPPLS_CLIENT_SECRET: fake-secret

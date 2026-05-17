@@ -14,7 +14,7 @@ router.use(strictLimiter);
 router.post('/v1/order', async (req, res, next) => {
   try {
     const result = await createOrder(req.body);
-    ok(res, result, { wrapper: 'pay.vidya.tech' });
+    ok(res, result, { wrapper: 'pay.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -36,7 +36,7 @@ router.post('/v1/payout', async (req, res, next) => {
     }
 
     const result = await payout({ amount, account, purpose, idempotencyKey, splits });
-    ok(res, result, { wrapper: 'pay.vidya.tech' });
+    ok(res, result, { wrapper: 'pay.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -52,7 +52,7 @@ router.post('/v1/webhook', async (req, res, next) => {
     if (!signature) return fail(res, 400, 'Missing x-razorpay-signature header');
 
     const result = verifyWebhook(req.body, signature);
-    ok(res, result, { wrapper: 'pay.vidya.tech' });
+    ok(res, result, { wrapper: 'pay.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -65,7 +65,7 @@ router.post('/v1/webhook', async (req, res, next) => {
 router.get('/v1/payment/:id', async (req, res, next) => {
   try {
     const result = await fetchPayment(req.params.id);
-    ok(res, result, { wrapper: 'pay.vidya.tech' });
+    ok(res, result, { wrapper: 'pay.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }

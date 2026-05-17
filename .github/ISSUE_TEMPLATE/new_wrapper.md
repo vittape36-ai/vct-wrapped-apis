@@ -7,7 +7,7 @@ assignees: ''
 ---
 
 ## Wrapper Name
-<!-- e.g., sms.vidya.tech, storage.vidya.tech -->
+<!-- e.g., sms.vidyacoddle.tech, storage.vidyacoddle.tech -->
 
 ## Provider(s)
 <!-- Which upstream API(s) would this wrap? -->

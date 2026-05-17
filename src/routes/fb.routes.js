@@ -15,7 +15,7 @@ router.post('/v1/auth/verify', async (req, res, next) => {
     const { idToken } = req.body;
     if (!idToken) return fail(res, 400, 'idToken is required');
     const user = await fb.verifyToken(idToken);
-    ok(res, user, { wrapper: 'fb.vidya.tech' });
+    ok(res, user, { wrapper: 'fb.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -28,7 +28,7 @@ router.post('/v1/auth/verify', async (req, res, next) => {
 router.post('/v1/auth/create', async (req, res, next) => {
   try {
     const user = await fb.createUser(req.body);
-    ok(res, user, { wrapper: 'fb.vidya.tech' });
+    ok(res, user, { wrapper: 'fb.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -40,7 +40,7 @@ router.post('/v1/auth/create', async (req, res, next) => {
 router.get('/v1/auth/user/:uid', async (req, res, next) => {
   try {
     const user = await fb.getUser(req.params.uid);
-    ok(res, user, { wrapper: 'fb.vidya.tech' });
+    ok(res, user, { wrapper: 'fb.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -55,7 +55,7 @@ router.post('/v1/auth/claims', async (req, res, next) => {
     const { uid, claims } = req.body;
     if (!uid) return fail(res, 400, 'uid is required');
     const result = await fb.setClaims(uid, claims);
-    ok(res, result, { wrapper: 'fb.vidya.tech' });
+    ok(res, result, { wrapper: 'fb.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -70,7 +70,7 @@ router.get('/v1/db/:collection/:docId', async (req, res, next) => {
   try {
     const doc = await fb.getDoc(req.params.collection, req.params.docId);
     if (!doc) return fail(res, 404, 'Document not found');
-    ok(res, doc, { wrapper: 'fb.vidya.tech' });
+    ok(res, doc, { wrapper: 'fb.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -85,7 +85,7 @@ router.put('/v1/db/:collection/:docId', async (req, res, next) => {
     const { data, merge } = req.body;
     if (!data) return fail(res, 400, 'data object is required');
     const result = await fb.setDoc(req.params.collection, req.params.docId, data, merge);
-    ok(res, result, { wrapper: 'fb.vidya.tech' });
+    ok(res, result, { wrapper: 'fb.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -98,7 +98,7 @@ router.put('/v1/db/:collection/:docId', async (req, res, next) => {
 router.post('/v1/db/:collection/query', async (req, res, next) => {
   try {
     const docs = await fb.queryDocs(req.params.collection, req.body);
-    ok(res, docs, { wrapper: 'fb.vidya.tech', count: docs.length });
+    ok(res, docs, { wrapper: 'fb.vidyacoddle.tech', count: docs.length });
   } catch (err) {
     next(err);
   }
@@ -110,7 +110,7 @@ router.post('/v1/db/:collection/query', async (req, res, next) => {
 router.delete('/v1/db/:collection/:docId', async (req, res, next) => {
   try {
     const result = await fb.deleteDoc(req.params.collection, req.params.docId);
-    ok(res, result, { wrapper: 'fb.vidya.tech' });
+    ok(res, result, { wrapper: 'fb.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -126,7 +126,7 @@ router.get('/v1/memora/:collection/:docId', async (req, res, next) => {
   try {
     const result = await fb.readWithMemora(req.params.collection, req.params.docId);
     if (!result) return fail(res, 404, 'Document not found');
-    ok(res, result, { wrapper: 'fb.vidya.tech', memora: true });
+    ok(res, result, { wrapper: 'fb.vidyacoddle.tech', memora: true });
   } catch (err) {
     next(err);
   }

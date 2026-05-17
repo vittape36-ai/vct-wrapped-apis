@@ -1,6 +1,6 @@
 # API Reference — VCT Wrapped APIs
 
-Base URL: `http://localhost:4000` (self-hosted) or `https://api.vidya.tech` (managed)
+Base URL: `http://localhost:4000` (self-hosted) or `https://api.vidyacoddle.tech` (managed)
 
 All requests require the `x-api-key` header.
 
@@ -21,7 +21,7 @@ Lists all available wrappers with their route prefixes and status.
 
 ---
 
-## LLM — `llm.vidya.tech`
+## LLM — `llm.vidyacoddle.tech`
 
 ### `POST /llm/v1/chat`
 Chat completion with automatic provider fallback and key rotation.
@@ -55,7 +55,7 @@ Returns available models grouped by provider.
 
 ---
 
-## Pay — `pay.vidya.tech`
+## Pay — `pay.vidyacoddle.tech`
 
 ### `POST /pay/v1/order`
 Create a Razorpay order.
@@ -88,7 +88,7 @@ Fetch payment details by Razorpay payment ID.
 
 ---
 
-## Firebase — `fb.vidya.tech`
+## Firebase — `fb.vidyacoddle.tech`
 
 ### Auth
 
@@ -146,7 +146,7 @@ Read with Memora metadata injection (timestamps, access logs, agent context).
 
 ---
 
-## CDN — `cdn.vidya.tech`
+## CDN — `cdn.vidyacoddle.tech`
 
 ### `POST /cdn/v1/upload/sign`
 Generate a signed Cloudinary upload URL.
@@ -183,7 +183,7 @@ Delete an asset.
 
 ---
 
-## Mail — `mail.vidya.tech`
+## Mail — `mail.vidyacoddle.tech`
 
 ### `POST /mail/v1/send`
 Send a transactional email via Resend.
@@ -209,7 +209,7 @@ List available built-in templates.
 
 ---
 
-## Geo — `geo.vidya.tech`
+## Geo — `geo.vidyacoddle.tech`
 
 ### `GET /geo/v1/geocode`
 Geocode an address (India-optimized via MapMyIndia/Mappls).

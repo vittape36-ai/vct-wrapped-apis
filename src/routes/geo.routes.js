@@ -13,7 +13,7 @@ router.get('/v1/geocode', async (req, res, next) => {
     if (!q) return fail(res, 400, 'Query parameter "q" is required');
 
     const result = await geocode(q);
-    ok(res, result, { wrapper: 'geo.vidya.tech' });
+    ok(res, result, { wrapper: 'geo.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -28,7 +28,7 @@ router.get('/v1/reverse', async (req, res, next) => {
     if (!lat || !lng) return fail(res, 400, 'lat and lng query params are required');
 
     const result = await reverseGeocode(parseFloat(lat), parseFloat(lng));
-    ok(res, result, { wrapper: 'geo.vidya.tech' });
+    ok(res, result, { wrapper: 'geo.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -43,7 +43,7 @@ router.get('/v1/suggest', async (req, res, next) => {
     if (!q) return fail(res, 400, 'Query parameter "q" is required');
 
     const result = await autosuggest(q, { location, zoom, pod });
-    ok(res, result, { wrapper: 'geo.vidya.tech' });
+    ok(res, result, { wrapper: 'geo.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -61,7 +61,7 @@ router.post('/v1/distance', async (req, res, next) => {
     }
 
     const result = await distanceMatrix(origins, destinations, { profile });
-    ok(res, result, { wrapper: 'geo.vidya.tech' });
+    ok(res, result, { wrapper: 'geo.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }

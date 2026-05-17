@@ -8,12 +8,12 @@ assignees: ''
 
 ## Wrapper
 <!-- Which wrapper does this relate to? -->
-- [ ] `llm` (llm.vidya.tech)
-- [ ] `pay` (pay.vidya.tech)
-- [ ] `fb` (fb.vidya.tech)
-- [ ] `cdn` (cdn.vidya.tech)
-- [ ] `mail` (mail.vidya.tech)
-- [ ] `geo` (geo.vidya.tech)
+- [ ] `llm` (llm.vidyacoddle.tech)
+- [ ] `pay` (pay.vidyacoddle.tech)
+- [ ] `fb` (fb.vidyacoddle.tech)
+- [ ] `cdn` (cdn.vidyacoddle.tech)
+- [ ] `mail` (mail.vidyacoddle.tech)
+- [ ] `geo` (geo.vidyacoddle.tech)
 - [ ] Shared middleware / core
 - [ ] New wrapper (describe below)
 

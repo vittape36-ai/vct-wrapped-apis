@@ -14,7 +14,7 @@ router.post('/v1/send', async (req, res, next) => {
     if (!to) return fail(res, 400, 'to address is required');
 
     const result = await send(req.body);
-    ok(res, result, { wrapper: 'mail.vidya.tech' });
+    ok(res, result, { wrapper: 'mail.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -30,7 +30,7 @@ router.post('/v1/batch', async (req, res, next) => {
     if (!emails) return fail(res, 400, 'emails array is required');
 
     const results = await sendBatch(emails);
-    ok(res, results, { wrapper: 'mail.vidya.tech', count: results.length });
+    ok(res, results, { wrapper: 'mail.vidyacoddle.tech', count: results.length });
   } catch (err) {
     next(err);
   }
@@ -41,7 +41,7 @@ router.post('/v1/batch', async (req, res, next) => {
  * List available email templates.
  */
 router.get('/v1/templates', (_req, res) => {
-  ok(res, { templates: listTemplates() }, { wrapper: 'mail.vidya.tech' });
+  ok(res, { templates: listTemplates() }, { wrapper: 'mail.vidyacoddle.tech' });
 });
 
 export default router;

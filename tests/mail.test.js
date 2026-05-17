@@ -51,7 +51,7 @@ describe('Mail Validation', () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   it('should validate correct email formats', () => {
-    const valid = ['user@example.com', 'dev@vidya.tech', 'test+tag@mail.co.in'];
+    const valid = ['user@example.com', 'dev@vidyacoddle.tech', 'test+tag@mail.co.in'];
     valid.forEach((email) => expect(emailRegex.test(email)).toBe(true));
   });
 

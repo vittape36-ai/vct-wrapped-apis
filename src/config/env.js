@@ -33,7 +33,7 @@ const schema = Joi.object({
 
   // Mail
   RESEND_API_KEY: Joi.string().default(''),
-  MAIL_FROM_DEFAULT: Joi.string().default('noreply@vidya.tech'),
+  MAIL_FROM_DEFAULT: Joi.string().default('noreply@vidyacoddle.tech'),
   MAIL_FROM_NAME: Joi.string().default('Vidya Coddle Tech'),
 
   // Geo

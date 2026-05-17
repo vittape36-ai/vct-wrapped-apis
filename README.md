@@ -1,6 +1,6 @@
 # 🔌 VCT Wrapped APIs
 
-**Production-ready API wrappers by [Vidya Coddle Tech](https://vidya.tech)**  
+**Production-ready API wrappers by [Vidya Coddle Tech](https://vidyacoddle.tech)**  
 _One SDK. Six services. Ship Day 1._
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -16,12 +16,12 @@ Wrapped Open APIs = battle-tested wrappers around popular third-party services, 
 
 | Wrapper | Domain | Wraps | What You Get |
 |---------|--------|-------|--------------|
-| **`llm.vidya.tech`** | AI/LLM | OpenAI, Gemini | Key rotation, response caching, automatic fallbacks |
-| **`pay.vidya.tech`** | Payments | RazorpayX | Payout orchestration, vendor splits, retry logic |
-| **`fb.vidya.tech`** | Backend | Firebase Auth/DB | Auth + Firestore with Memora memory injection |
-| **`cdn.vidya.tech`** | Media | Cloudinary | Signed uploads, on-the-fly transforms, CDN caching |
-| **`mail.vidya.tech`** | Email | Resend | 3ms transactional email, template engine, batch sends |
-| **`geo.vidya.tech`** | Maps | MapMyIndia | India-optimized geocoding, reverse lookup, distance matrix |
+| **`llm.vidyacoddle.tech`** | AI/LLM | OpenAI, Gemini | Key rotation, response caching, automatic fallbacks |
+| **`pay.vidyacoddle.tech`** | Payments | RazorpayX | Payout orchestration, vendor splits, retry logic |
+| **`fb.vidyacoddle.tech`** | Backend | Firebase Auth/DB | Auth + Firestore with Memora memory injection |
+| **`cdn.vidyacoddle.tech`** | Media | Cloudinary | Signed uploads, on-the-fly transforms, CDN caching |
+| **`mail.vidyacoddle.tech`** | Email | Resend | 3ms transactional email, template engine, batch sends |
+| **`geo.vidyacoddle.tech`** | Maps | MapMyIndia | India-optimized geocoding, reverse lookup, distance matrix |
 
 Every wrapper gives you:
 - 🔑 **Key rotation** — never hardcode a vendor key again
@@ -237,5 +237,5 @@ MIT — see [LICENSE](LICENSE) for details.
 
 ---
 
-**Built with ❤️ by [Vidya Coddle Tech](https://vidya.tech)**  
+**Built with ❤️ by [Vidya Coddle Tech](https://vidyacoddle.tech)**  
 _Stop writing boilerplate. Start shipping product._

@@ -132,7 +132,7 @@ export async function readWithMemora(collection, docId) {
     data: doc,
     memoraContext: {
       type: 'user_data',
-      provider: 'fb.vidya.tech',
+      provider: 'fb.vidyacoddle.tech',
       payload: doc,
       retrievedAt: new Date().toISOString(),
     },

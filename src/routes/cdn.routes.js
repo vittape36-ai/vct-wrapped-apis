@@ -12,7 +12,7 @@ const router = Router();
 router.post('/v1/upload/sign', (req, res, next) => {
   try {
     const result = cdn.getSignedUpload(req.body);
-    ok(res, result, { wrapper: 'cdn.vidya.tech' });
+    ok(res, result, { wrapper: 'cdn.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -28,7 +28,7 @@ router.post('/v1/url/sign', (req, res, next) => {
     const { publicId, transforms, ttlSeconds } = req.body;
     if (!publicId) return fail(res, 400, 'publicId is required');
     const url = cdn.getSignedUrl(publicId, transforms, ttlSeconds);
-    ok(res, { url, publicId }, { wrapper: 'cdn.vidya.tech' });
+    ok(res, { url, publicId }, { wrapper: 'cdn.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -44,7 +44,7 @@ router.post('/v1/transform', (req, res, next) => {
     const { publicId, transforms } = req.body;
     if (!publicId || !transforms) return fail(res, 400, 'publicId and transforms are required');
     const result = cdn.transform(publicId, transforms);
-    ok(res, result, { wrapper: 'cdn.vidya.tech' });
+    ok(res, result, { wrapper: 'cdn.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -56,7 +56,7 @@ router.post('/v1/transform', (req, res, next) => {
 router.delete('/v1/asset/:publicId', async (req, res, next) => {
   try {
     const result = await cdn.deleteAsset(req.params.publicId);
-    ok(res, result, { wrapper: 'cdn.vidya.tech' });
+    ok(res, result, { wrapper: 'cdn.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }
@@ -68,7 +68,7 @@ router.delete('/v1/asset/:publicId', async (req, res, next) => {
 router.get('/v1/asset/:publicId', async (req, res, next) => {
   try {
     const result = await cdn.getAsset(req.params.publicId);
-    ok(res, result, { wrapper: 'cdn.vidya.tech' });
+    ok(res, result, { wrapper: 'cdn.vidyacoddle.tech' });
   } catch (err) {
     next(err);
   }

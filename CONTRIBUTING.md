@@ -22,7 +22,7 @@ Open an issue using the **Bug Report** template. Include:
 
 ### ✨ Feature Requests
 Open an issue using the **Feature Request** template. We especially want:
-- New wrapper proposals (e.g., `sms.vidya.tech`, `storage.vidya.tech`)
+- New wrapper proposals (e.g., `sms.vidyacoddle.tech`, `storage.vidyacoddle.tech`)
 - SDK improvements
 - Performance optimizations
 

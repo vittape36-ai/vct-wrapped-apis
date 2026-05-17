@@ -42,14 +42,14 @@ app.get('/health', (_req, res) => {
 app.get('/wrappers', (_req, res) => {
   ok(res, {
     wrappers: [
-      { name: 'LLM',      prefix: '/llm',  domain: 'llm.vidya.tech',  description: 'OpenAI + Gemini with key rotation, caching, fallbacks' },
-      { name: 'Pay',      prefix: '/pay',  domain: 'pay.vidya.tech',  description: 'RazorpayX payouts, vendor splits, webhook verification' },
-      { name: 'Firebase', prefix: '/fb',   domain: 'fb.vidya.tech',   description: 'Firebase Auth/DB with Memora injection' },
-      { name: 'CDN',      prefix: '/cdn',  domain: 'cdn.vidya.tech',  description: 'Cloudinary signed uploads + on-the-fly transforms' },
-      { name: 'Mail',     prefix: '/mail', domain: 'mail.vidya.tech', description: 'Resend transactional email with templates' },
-      { name: 'Geo',      prefix: '/geo',  domain: 'geo.vidya.tech',  description: 'MapMyIndia geocoding optimized for India' },
+      { name: 'LLM',      prefix: '/llm',  domain: 'llm.vidyacoddle.tech',  description: 'OpenAI + Gemini with key rotation, caching, fallbacks' },
+      { name: 'Pay',      prefix: '/pay',  domain: 'pay.vidyacoddle.tech',  description: 'RazorpayX payouts, vendor splits, webhook verification' },
+      { name: 'Firebase', prefix: '/fb',   domain: 'fb.vidyacoddle.tech',   description: 'Firebase Auth/DB with Memora injection' },
+      { name: 'CDN',      prefix: '/cdn',  domain: 'cdn.vidyacoddle.tech',  description: 'Cloudinary signed uploads + on-the-fly transforms' },
+      { name: 'Mail',     prefix: '/mail', domain: 'mail.vidyacoddle.tech', description: 'Resend transactional email with templates' },
+      { name: 'Geo',      prefix: '/geo',  domain: 'geo.vidyacoddle.tech',  description: 'MapMyIndia geocoding optimized for India' },
     ],
-    docs: 'https://api.vidya.tech/docs',
+    docs: 'https://api.vidyacoddle.tech/docs',
     sdks: {
       node: 'npm i @vct/api-plus',
       rust: 'cargo add vct-api-plus',

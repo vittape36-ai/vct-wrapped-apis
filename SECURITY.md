@@ -10,7 +10,7 @@
 
 **Do NOT open a public GitHub issue for security vulnerabilities.**
 
-Instead, please email **security@vidya.tech** with:
+Instead, please email **security@vidyacoddle.tech** with:
 
 1. **Description** of the vulnerability
 2. **Steps to reproduce** (curl commands, request payloads)
