@@ -49,23 +49,23 @@ describe('LLM Service', () => {
     vi.clearAllMocks();
   });
 
-  it('should export chatCompletion function', async () => {
+  it('should export chat function', async () => {
     const llmService = await import('../src/services/llm.service.js');
-    expect(typeof llmService.chatCompletion).toBe('function');
+    expect(typeof llmService.chat).toBe('function');
   });
 
-  it('should export getModels function', async () => {
+  it('should export listModels function', async () => {
     const llmService = await import('../src/services/llm.service.js');
-    expect(typeof llmService.getModels).toBe('function');
+    expect(typeof llmService.listModels).toBe('function');
   });
 
-  it('getModels should return provider-grouped models', async () => {
-    const { getModels } = await import('../src/services/llm.service.js');
-    const models = getModels();
-    expect(models).toHaveProperty('openai');
-    expect(models).toHaveProperty('gemini');
-    expect(Array.isArray(models.openai)).toBe(true);
-    expect(Array.isArray(models.gemini)).toBe(true);
+  it('listModels should return provider-grouped models', async () => {
+    const { listModels } = await import('../src/services/llm.service.js');
+    const result = listModels();
+    expect(result).toHaveProperty('openai');
+    expect(result).toHaveProperty('gemini');
+    expect(Array.isArray(result.openai.models)).toBe(true);
+    expect(Array.isArray(result.gemini.models)).toBe(true);
   });
 });
 

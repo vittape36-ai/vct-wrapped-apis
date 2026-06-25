@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VCT Wrapped APIs | Midnight Apple Odyssey</title>
+  <meta name="description" content="An ultra-long, cinematic, scroll-reactive developer portal and API gateway wrapper suite styled in Midnight Apple & Liquid Glass.">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body class="apple-dark-glass">
+
+  <!-- Reactive Ambient Background Orbs Layer -->
+  <div class="ambient-container" id="ambient-container">
+    <div class="ambient-orb" id="ambient-orb-1"></div>
+    <div class="ambient-orb" id="ambient-orb-2"></div>
+    <div class="ambient-orb" id="ambient-orb-3"></div>
+  </div>
+
+  <!-- Custom Fluid Cursor -->
+  <div id="custom-cursor"></div>
+  <div id="custom-cursor-dot"></div>
+
+  <!-- Smooth Scroll Narrative Wrapper -->
+  <div id="scroll-container">
+
+    <!-- NAVIGATION HEADER -->
+    <header class="narrative-header clickable">
+      <div class="container nav-container">
+        <a href="/" class="logo clickable">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m13 2-2 10h9L9 22l2-10H3L13 2z"/>
+          </svg>
+          VCT API<span class="highlight-cyan">+</span>
+        </a>
+        <nav class="nav-links">
+          <a href="#manifesto-section" class="nav-link clickable">Manifesto</a>
+          <a href="#arsenal-section" class="nav-link clickable">The Arsenal</a>
+          <a href="#vault-section" class="nav-link clickable">Dynamic Vault</a>
+          <a href="#velocity-section" class="nav-link clickable">Edge Caching</a>
+          <a href="/dashboard.html" class="btn-tactile btn-glow clickable">Console</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- SECTION 1: THE APEX (HERO) -->
+    <section id="hero-section" class="section-hero">
+      <div class="container hero-container">
+        <!-- Colossal Liquid Glass Pill -->
+        <div class="liquid-glass hero-pill-wrapper reveal-elem clickable" data-speed="1.05">
+          <span class="hero-pill-badge">VCT APIs</span>
+        </div>
+        <h1 class="hero-title reveal-elem" data-speed="1.15">The ultimate wrapper.<br>Built for scale.</h1>
+        <p class="hero-subtitle reveal-elem" data-speed="1.1">Production-ready API wrappers offering resilience, Redis caching, credentials round-robin, and failsafe pipelines.</p>
+        <div class="hero-ctas reveal-elem" data-speed="1.2">
+          <a href="/dashboard.html" class="btn-tactile btn-primary clickable">Initialize Sandbox</a>
+          <a href="#manifesto-section" class="btn-tactile btn-secondary clickable">Manifesto</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: THE MANIFESTO (TEXT REVEAL) -->
+    <section id="manifesto-section" class="section-manifesto">
+      <div class="container manifesto-container">
+        <span class="section-badge reveal-elem">01 // THE MANIFESTO</span>
+        <!-- HUGE SF Pro Typography revealed word-by-word -->
+        <h2 class="reveal-text manifesto-reveal clickable" id="manifesto-text">
+          Complexity stripped away. Raw performance delivered.
+        </h2>
+      </div>
+    </section>
+
+    <!-- SECTION 3: THE ARCHITECTURE (LIQUID BENTO GRID) -->
+    <section id="arsenal-section" class="section-arsenal">
+      <div class="container">
+        <div class="section-header reveal-elem">
+          <span class="section-badge">02 // ARCHITECTURE</span>
+          <h2 class="section-title">The API Arsenal</h2>
+          <p class="section-subtitle">Examine the asymmetrical grid of resilient gateway wrappers.</p>
+        </div>
+
+        <div class="asymmetric-grid">
+          
+          <!-- LLM Card (Wide - Spans 2 Columns) -->
+          <div class="liquid-glass bento-card bento-wide reveal-elem clickable" data-service="llm" data-speed="1.02">
+            <div class="card-glow"></div>
+            <div class="card-top">
+              <div class="card-icon"><i data-lucide="sparkles"></i></div>
+              <div class="tactile-toggle active"><span class="toggle-thumb"></span></div>
+            </div>
+            <div class="card-body">
+              <h3>LLM Wrapper</h3>
+              <span class="card-route">POST /llm/v1/chat</span>
+              <p>Automatically rotates key pools and redirects to Gemini fallback model when OpenAI experiences rate limits or timeout failures.</p>
+              <div class="card-footer-metrics">
+                <span class="metric-tag">OpenAI + Gemini</span>
+                <span class="metric-tag">Edge Caching</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pay Card (Square) -->
+          <div class="liquid-glass bento-card reveal-elem clickable" data-service="pay" data-speed="1.07">
+            <div class="card-glow"></div>
+            <div class="card-top">
+              <div class="card-icon"><i data-lucide="credit-card"></i></div>
+              <div class="tactile-toggle active"><span class="toggle-thumb"></span></div>
+            </div>
+            <div class="card-body">
+              <h3>Pay Splitter</h3>
+              <span class="card-route">POST /pay/v1/order</span>
+              <p>RazorpayX payouts with automated vendor splits and verification check ledgers.</p>
+              <div class="card-footer-metrics">
+                <span class="metric-tag">RazorpayX</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Firebase Card (Square) -->
+          <div class="liquid-glass bento-card reveal-elem clickable" data-service="fb" data-speed="1.05">
+            <div class="card-glow"></div>
+            <div class="card-top">
+              <div class="card-icon"><i data-lucide="shield-check"></i></div>
+              <div class="tactile-toggle active"><span class="toggle-thumb"></span></div>
+            </div>
+            <div class="card-body">
+              <h3>Firebase DB</h3>
+              <span class="card-route">POST /fb/v1/auth/verify</span>
+              <p>Unified auth validations and Firestore caches injected with Memora tokens.</p>
+              <div class="card-footer-metrics">
+                <span class="metric-tag">Token Cache</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CDN Card (Wide - Spans 2 Columns) -->
+          <div class="liquid-glass bento-card bento-wide reveal-elem clickable" data-service="cdn" data-speed="1.04">
+            <div class="card-glow"></div>
+            <div class="card-top">
+              <div class="card-icon"><i data-lucide="image"></i></div>
+              <div class="tactile-toggle active"><span class="toggle-thumb"></span></div>
+            </div>
+            <div class="card-body">
+              <h3>CDN transformer</h3>
+              <span class="card-route">POST /cdn/v1/url/sign</span>
+              <p>Cloudinary signed uploads, responsive transformations, and secure delivery URLs compiled dynamically.</p>
+              <div class="card-footer-metrics">
+                <span class="metric-tag">Cloudinary</span>
+                <span class="metric-tag">Signed Links</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mail Card (Square) -->
+          <div class="liquid-glass bento-card reveal-elem clickable" data-service="mail" data-speed="1.08">
+            <div class="card-glow"></div>
+            <div class="card-top">
+              <div class="card-icon"><i data-lucide="mail"></i></div>
+              <div class="tactile-toggle active"><span class="toggle-thumb"></span></div>
+            </div>
+            <div class="card-body">
+              <h3>Mail Dispatch</h3>
+              <span class="card-route">POST /mail/v1/send</span>
+              <p>Pre-compiled Resend transactional mail templates with inline CSS processors.</p>
+              <div class="card-footer-metrics">
+                <span class="metric-tag">Resend SMTP</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Geo Card (Wide - Spans 2 Columns) -->
+          <div class="liquid-glass bento-card bento-wide reveal-elem clickable" data-service="geo" data-speed="1.03">
+            <div class="card-glow"></div>
+            <div class="card-top">
+              <div class="card-icon"><i data-lucide="map-pin"></i></div>
+              <div class="tactile-toggle active"><span class="toggle-thumb"></span></div>
+            </div>
+            <div class="card-body">
+              <h3>Geo Matrix</h3>
+              <span class="card-route">GET /geo/v1/geocode</span>
+              <p>India-optimized MapMyIndia geocoding, reverse lookups, and distance matrix travel metrics.</p>
+              <div class="card-footer-metrics">
+                <span class="metric-tag">MapMyIndia</span>
+                <span class="metric-tag">Geocoding</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: THE VAULT (KEY ROTATION) -->
+    <section id="vault-section" class="section-vault">
+      <div class="container">
+        <div class="section-header reveal-elem">
+          <span class="section-badge">03 // DYNAMIC SECURITY</span>
+          <h2 class="section-title">The Vault</h2>
+          <p class="section-subtitle">Continuous round-robin credential checks and automated cooling intervals.</p>
+        </div>
+
+        <div class="liquid-glass vault-panel reveal-elem clickable" data-speed="1.04">
+          <div class="vault-visual">
+            <div class="vault-rings-wrapper">
+              <!-- Nested Rotating SVGs -->
+              <svg class="vault-ring ring-outer" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="85" stroke="rgba(255,255,255,0.06)" stroke-width="2.5" stroke-dasharray="15 30 10 20" fill="none"/>
+              </svg>
+              <svg class="vault-ring ring-middle" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="65" stroke="var(--neon-cyan)" stroke-width="1.5" stroke-dasharray="30 15" fill="none" opacity="0.35"/>
+              </svg>
+              <svg class="vault-ring ring-inner" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="45" stroke="var(--neon-purple)" stroke-width="2" stroke-dasharray="10 15" fill="none" opacity="0.5"/>
+              </svg>
+              <div class="vault-core-node">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="vault-description">
+            <h3>Round-Robin Rotation Vault</h3>
+            <p>Meticulously monitors latency and rate-limit triggers. Upstream keys are automatically placed on cooldown upon receiving rate errors (e.g. 429), swapping in fresh credentials from our secure round-robin pool to keep gateways open.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: EDGE VELOCITY (REDIS CACHING) -->
+    <section id="velocity-section" class="section-velocity">
+      <div class="container">
+        <div class="section-header reveal-elem">
+          <span class="section-badge">04 // SPEED LATENCY</span>
+          <h2 class="section-title">Edge Velocity</h2>
+          <p class="section-subtitle">In-memory caching architectures executing requests in sub-milliseconds.</p>
+        </div>
+
+        <div class="liquid-glass velocity-panel reveal-elem clickable" data-speed="1.06">
+          <div class="velocity-tracks">
+            <!-- 3 horizontal tracks with data packet lines -->
+            <div class="data-track track-1">
+              <span class="track-label">REDIS_01</span>
+              <div class="track-line"></div>
+              <div class="data-packet packet-1"></div>
+              <div class="data-packet packet-2"></div>
+            </div>
+            <div class="data-track track-2">
+              <span class="track-label">REDIS_02</span>
+              <div class="track-line"></div>
+              <div class="data-packet packet-3"></div>
+            </div>
+            <div class="data-track track-3">
+              <span class="track-label">REDIS_03</span>
+              <div class="track-line"></div>
+              <div class="data-packet packet-4"></div>
+              <div class="data-packet packet-5"></div>
+            </div>
+          </div>
+          <div class="velocity-description">
+            <h3>Sub-5ms Memory Caches</h3>
+            <p>Inline Redis pipelines bypass heavy downstream server executions for cached endpoints. Rate check limits execute asynchronously, shielding backends from volumetric spikes.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: THE SANDBOX (TERMINAL SIMULATOR) -->
+    <section id="sandbox-section" class="section-sandbox">
+      <div class="container sandbox-container">
+        <div class="section-header reveal-elem">
+          <span class="section-badge">05 // INTERACTIVE SANDBOX</span>
+          <h2 class="section-title">The Sandbox Command</h2>
+          <p class="section-subtitle">Real-time pipeline simulations. Test credential rotations in your browser.</p>
+        </div>
+
+        <div class="sandbox-wrapper reveal-elem">
+          <!-- Floating macOS Terminal Card -->
+          <div class="liquid-glass terminal-card clickable" id="terminal-glass-card" data-speed="1.05">
+            <div class="terminal-header">
+              <div class="traffic-lights">
+                <span class="light red"></span>
+                <span class="light yellow"></span>
+                <span class="light green"></span>
+              </div>
+              <div class="terminal-title">vct-wrapped-gateway-sandbox.sh</div>
+              <button class="btn-icon clickable" id="btn-copy-code" title="Copy Command">
+                <i data-lucide="copy" class="copy-icon"></i>
+              </button>
+            </div>
+            <div class="terminal-body">
+              <pre><code class="language-bash" id="sandbox-terminal-screen"># Scroll to trigger sandbox execution...</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: IRONCLAD (VITEST & RETRIES) -->
+    <section id="ironclad-section" class="section-ironclad">
+      <div class="container">
+        <div class="section-header reveal-elem">
+          <span class="section-badge">06 // STABILITY ENGINE</span>
+          <h2 class="section-title">Ironclad Reliability</h2>
+          <p class="section-subtitle">100% test coverage and robust exponential backoff retries.</p>
+        </div>
+
+        <div class="ironclad-grid">
+          <!-- Card 1: Backoff Graph -->
+          <div class="liquid-glass ironclad-card card-backoff reveal-elem clickable" data-speed="1.07">
+            <h4>Exponential Backoff Backplane</h4>
+            <p>Downstream failures undergo immediate retries. The retry delay scales exponentially (e.g. 50ms -> 100ms -> 200ms) with jitter, preventing accidental provider flooding.</p>
+            <div class="backoff-graph-wrapper">
+              <svg class="backoff-graph" viewBox="0 0 200 100">
+                <line x1="10" y1="90" x2="190" y2="90" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+                <line x1="10" y1="10" x2="10" y2="90" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+                <path d="M 10 90 Q 70 85 110 60 T 190 10" stroke="var(--neon-cyan)" stroke-width="2.5" fill="none" />
+                <circle cx="10" cy="90" r="4" fill="#fff" />
+                <circle cx="70" cy="85" r="4" fill="var(--neon-blue)" />
+                <circle cx="110" cy="60" r="4" fill="var(--neon-purple)" />
+                <circle cx="190" cy="10" r="4" fill="var(--neon-cyan)" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Card 2: Coverage Checkmarks -->
+          <div class="liquid-glass ironclad-card card-coverage reveal-elem clickable" data-speed="1.04">
+            <h4>Vitest Route Verifications</h4>
+            <p>Continuous integration checks verify all 6 wrapper service routes. Test suites ensure error isolation works seamlessly before code ships.</p>
+            <div class="coverage-visual">
+              <div class="coverage-circle-wrapper">
+                <svg class="progress-ring" width="100" height="100">
+                  <circle class="progress-ring-bg" stroke="rgba(255,255,255,0.03)" stroke-width="6" fill="transparent" r="40" cx="50" cy="50"/>
+                  <circle class="progress-ring-fill" stroke="var(--success)" stroke-width="6" fill="transparent" r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="0"/>
+                </svg>
+                <div class="check-container">
+                  <i data-lucide="check-check"></i>
+                </div>
+              </div>
+              <div class="coverage-meta">
+                <span class="cov-number">100%</span>
+                <span class="cov-label">VITEST COVERAGE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8: THE ZENITH (CTA & FOOTER) -->
+    <section id="zenith-section" class="section-cta container">
+      <!-- Glow Orb behind CTA -->
+      <div class="cta-glow-orb" id="cta-glow-orb"></div>
+      
+      <div class="liquid-glass cta-badge reveal-elem clickable" data-speed="1.05">
+        <h2 class="cta-title">Initialize Sandbox</h2>
+        <p class="cta-subtitle">Initialize rotation pools, inspect live telemetry streams, and run real API requests inside our developer console sandbox.</p>
+        <div class="cta-actions">
+          <a href="/dashboard.html" class="btn-tactile btn-primary clickable">Launch Developer Console</a>
+          <a href="https://github.com/ManasTripathi07/vct-wrapped-apis" target="_blank" class="btn-tactile btn-secondary clickable">GitHub Source</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="narrative-footer container">
+      <div class="footer-left">
+        &copy; 2026 Vidya Coddle Tech. Styled in Midnight Apple & Liquid Glass.
+      </div>
+      <div class="footer-right">
+        <a href="/health" target="_blank" class="clickable">Uptime Checks</a>
+        <a href="/wrappers" target="_blank" class="clickable">Gateway Catalog</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- CDNs for External Libraries -->
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <!-- Lenis for smooth-scroll -->
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+  <!-- Prism.js for syntax highlighting -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Main Application Script -->
+  <script src="/app.js"></script>
+</body>
+</html>

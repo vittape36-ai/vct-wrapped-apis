@@ -52,7 +52,9 @@
     "resend": "^4.0.0",
     "uuid": "^10.0.0",
     "winston": "^3.14.0",
-    "joi": "^17.13.0"
+    "joi": "^17.13.0",
+    "animejs": "^4.5.0",
+    "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
     "vitest": "^2.1.0",

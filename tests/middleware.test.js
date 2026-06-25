@@ -35,29 +35,29 @@ describe('Response Helpers', () => {
 
 describe('Retry Utility', () => {
   it('should succeed on first try if no error', async () => {
-    const { withRetry } = await import('../src/utils/retry.js');
+    const { retry } = await import('../src/utils/retry.js');
     const fn = vi.fn().mockResolvedValue('success');
-    const result = await withRetry(fn, { maxAttempts: 3, baseDelay: 10 });
+    const result = await retry(fn, { retries: 2, baseDelay: 10 });
     expect(result).toBe('success');
     expect(fn).toHaveBeenCalledTimes(1);
   });
 
   it('should retry on failure and eventually succeed', async () => {
-    const { withRetry } = await import('../src/utils/retry.js');
+    const { retry } = await import('../src/utils/retry.js');
     const fn = vi
       .fn()
       .mockRejectedValueOnce(new Error('fail 1'))
       .mockRejectedValueOnce(new Error('fail 2'))
       .mockResolvedValue('success');
-    const result = await withRetry(fn, { maxAttempts: 3, baseDelay: 10 });
+    const result = await retry(fn, { retries: 2, baseDelay: 10 });
     expect(result).toBe('success');
     expect(fn).toHaveBeenCalledTimes(3);
   });
 
   it('should throw after exhausting retries', async () => {
-    const { withRetry } = await import('../src/utils/retry.js');
+    const { retry } = await import('../src/utils/retry.js');
     const fn = vi.fn().mockRejectedValue(new Error('always fails'));
-    await expect(withRetry(fn, { maxAttempts: 2, baseDelay: 10 })).rejects.toThrow('always fails');
+    await expect(retry(fn, { retries: 1, baseDelay: 10 })).rejects.toThrow('always fails');
     expect(fn).toHaveBeenCalledTimes(2);
   });
 });
