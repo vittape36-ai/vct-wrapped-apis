@@ -3,173 +3,202 @@
   const servicesConfig = {
     llm: {
       name: 'LLM Wrapper',
-      stat: '2 Models Active (OpenAI/Gemini)',
       method: 'POST',
       endpoint: '/llm/v1/chat',
-      payload: {
-        messages: [
-          {
-            role: "user",
-            content: "Explain API failovers in one sentence."
-          }
-        ]
-      },
-      response: {
-        ok: true,
-        data: {
-          provider: "gemini",
-          model: "gemini-1.5-flash",
-          content: "API failover automatically switches to a standby provider (like Gemini) when the primary provider (like OpenAI) goes offline.",
-          usage: { prompt_tokens: 22, completion_tokens: 31, total_tokens: 53 }
-        },
-        meta: { wrapper: "llm.vidyacoddle.tech", cache: "miss", fallback: true }
-      }
+      response: `[VCT AI Gateway resolved via Gemini fallback]
+{
+  "ok": true,
+  "data": {
+    "provider": "gemini",
+    "model": "gemini-1.5-flash",
+    "content": "Failsafe pool check completed. OpenAI rate limited (429) -> Gemini fallback auto-route success."
+  },
+  "meta": { "cache": "miss", "failover": true, "latencyMs": 142 }
+}`
     },
     pay: {
       name: 'Payments Wrapper',
-      stat: 'RazorpayX Ledger Verification',
       method: 'POST',
       endpoint: '/pay/v1/order',
-      payload: {
-        amount: 5000,
-        currency: "INR",
-        receipt: "rcpt_wrapped_001",
-        notes: { merchant: "VCT Lab Sandbox", env: "development" }
-      },
-      response: {
-        ok: true,
-        data: {
-          id: "order_PRj93x84LmKq",
-          entity: "order",
-          amount: 5000,
-          amount_paid: 0,
-          amount_due: 5000,
-          currency: "INR",
-          receipt: "rcpt_wrapped_001",
-          status: "created",
-          attempts: 0,
-          notes: { merchant: "VCT Lab Sandbox", env: "development" },
-          created_at: Math.round(Date.now() / 1000)
-        },
-        meta: { wrapper: "pay.vidyacoddle.tech" }
-      }
+      response: `[VCT Payment Gateway resolved]
+{
+  "ok": true,
+  "data": {
+    "order_id": "order_PRj93x84LmKq",
+    "amount": 5000,
+    "currency": "INR",
+    "splits": [
+      { "vendor_id": "vnd_012", "amount": 2500 },
+      { "vendor_id": "vnd_089", "amount": 2500 }
+    ],
+    "status": "authorized"
+  }
+}`
     },
     fb: {
       name: 'Firebase Wrapper',
-      stat: 'Firestore Cache Injector Active',
       method: 'POST',
       endpoint: '/fb/v1/auth/verify',
-      payload: {
-        idToken: "mock-firebase-id-token-abc-123"
-      },
-      response: {
-        ok: true,
-        data: {
-          uid: "usr_vct_test_7f8d",
-          email: "hacker-console@vidyacoddle.tech",
-          displayName: "Sleek Developer",
-          emailVerified: false,
-          disabled: false,
-          metadata: { creationTime: new Date().toUTCString(), lastSignInTime: new Date().toUTCString() }
-        },
-        meta: { wrapper: "fb.vidyacoddle.tech", memora_cache: "injected" }
-      }
+      response: `[VCT Firebase Guard resolved]
+{
+  "ok": true,
+  "data": {
+    "uid": "usr_vct_test_7f8d",
+    "email": "developer-sandbox@vidyacoddle.tech",
+    "displayName": "Enterprise Sandbox User"
+  },
+  "meta": { "token_cache": "injected", "expiry": "1h" }
+}`
     },
     cdn: {
       name: 'CDN Wrapper',
-      stat: 'Cloudinary Signed Transformer',
       method: 'POST',
       endpoint: '/cdn/v1/url/sign',
-      payload: {
-        publicId: "vct_wrapped_avatar",
-        transforms: { width: 300, height: 300, crop: "fill" },
-        ttlSeconds: 3600
-      },
-      response: {
-        ok: true,
-        data: {
-          publicId: "vct_wrapped_avatar",
-          url: "https://res.cloudinary.com/vct-cdn/image/upload/c_fill,h_300,w_300/s--8Lm7x9pQ--/vct_wrapped_avatar?token=cl_sig_7d8a9e0f1b2c3d",
-          expires_at: Math.round(Date.now() / 1000) + 3600
-        },
-        meta: { wrapper: "cdn.vidyacoddle.tech" }
-      }
+      response: `[VCT CDN Transformer resolved]
+{
+  "ok": true,
+  "data": {
+    "public_id": "assets/vct_main_logo",
+    "signedUrl": "https://res.cloudinary.com/vct-cdn/image/sign/c_fill,h_300,w_300/s--8Lm7x9pQ--/vct_main_logo?token=cl_sig_7d8a9e0f1b2c3d"
+  }
+}`
     },
     mail: {
       name: 'Mail Wrapper',
-      stat: 'Resend SMTP Gateway Active',
       method: 'POST',
       endpoint: '/mail/v1/send',
-      payload: {
-        to: "sandbox-tester@vidyacoddle.tech",
-        subject: "Unified Resend Mail Wrapper Active",
-        html: "<h1>VCT API+ Mail Delivered</h1><p>Processed successfully via Resend provider API.</p>"
-      },
-      response: {
-        ok: true,
-        data: {
-          id: "email_sent_9d8a7c2b5e3f",
-          to: ["sandbox-tester@vidyacoddle.tech"],
-          subject: "Unified Resend Mail Wrapper Active"
-        },
-        meta: { wrapper: "mail.vidyacoddle.tech" }
-      }
+      response: `[VCT Resend SMTP Dispatcher resolved]
+{
+  "ok": true,
+  "data": {
+    "delivery_id": "email_sent_9d8a7c2b5e3f",
+    "provider": "resend",
+    "status": "delivered_to_gateway"
+  }
+}`
     },
     geo: {
       name: 'Geo Wrapper',
-      stat: 'India Pin Code Auto-Suggest',
       method: 'GET',
       endpoint: '/geo/v1/geocode',
-      payload: {
-        q: "Red Fort, Delhi"
-      },
-      response: {
-        ok: true,
-        data: {
-          query: "Red Fort, Delhi",
-          results: [
-            {
-              formatted_address: "Red Fort, Chandni Chowk, Delhi, 110006",
-              latitude: 28.6562,
-              longitude: 77.2410,
-              pincode: "110006",
-              state: "Delhi",
-              district: "North Delhi",
-              accuracy: "high"
-            }
-          ]
-        },
-        meta: { wrapper: "geo.vidyacoddle.tech", provider: "MapMyIndia" }
-      }
+      response: `[VCT Geo Suggest resolved via MapMyIndia]
+{
+  "ok": true,
+  "data": {
+    "address": "Red Fort, Chandni Chowk, Delhi, 110006",
+    "coordinates": { "lat": 28.6562, "lng": 77.2410 }
+  }
+}`
     }
   };
 
-  const mockLogTemplates = [
-    { level: 'info', msg: 'GET /health - 200 OK (5ms)' },
-    { level: 'info', msg: 'GET /wrappers - 200 OK (3ms)' },
-    { level: 'info', msg: 'POST /llm/v1/chat - 200 OK (22ms) - Cache hit (Redis)' },
-    { level: 'info', msg: 'POST /llm/v1/chat - 200 OK (380ms) - Cache miss - OpenAI gateway invoked' },
-    { level: 'info', msg: 'POST /pay/v1/order - 200 OK (31ms) - Order generated: order_PRj93x84LmKq' },
-    { level: 'info', msg: 'POST /fb/v1/auth/verify - 200 OK (112ms) - Token verified via Memora Cache' },
-    { level: 'info', msg: 'POST /cdn/v1/url/sign - 200 OK (2ms) - Signature signed successfully' },
-    { level: 'info', msg: 'POST /mail/v1/send - 200 OK (145ms) - Mail template compilations dispatched' },
-    { level: 'info', msg: 'GET /geo/v1/geocode?q=Delhi - 200 OK (9ms) - Cache hit' },
-    { level: 'warn', msg: 'LLM: OpenAI returned 429 Rate Limit. Initiating key cooldown...' },
-    { level: 'info', msg: 'LLM Key Vault rotated. New primary: sk-proj-••••9w3a' },
-    { level: 'info', msg: 'LLM Fallback: Primary failed -> Gemini fallback invoked successfully (204ms)' },
-    { level: 'warn', msg: 'Auth validation: Client ip 127.0.0.1 failed API key verification.' }
-  ];
+  // Pre-baked responses for the "Ask Anything" AI box
+  const askAnythingResponses = {
+    'failsafe': `**Upstream Failsafe System**:
+VCT Wrapped APIs continuously monitor error thresholds (like 500s, 429s, and timeouts). 
+If an upstream service experiences failure:
+1. The request immediately undergoes exponential backoff retry.
+2. If failures continue, the wrapper swaps active keys or fails over to standby models (e.g. falling back from OpenAI to Gemini).`,
+    
+    'rotate': `**Automatic Key Rotation**:
+Credentials reside in a round-robin rotation pool. Latencies and provider limits are checked inline.
+When a key throws a rate limit error, it is placed on a cooling interval (cooldown timer), and fresh keys are swapped into the pipeline immediately.`,
+    
+    'caching': `**Sub-5ms Caching Backplane**:
+We use high-performance Redis pipelines inline with endpoints.
+- **Cache Hit**: Data is returned in <5ms.
+- **Cache Miss**: Downstream servers process requests, caching payloads dynamically for configured TTLs.
+Rate checking executes asynchronously in the background.`,
+    
+    'redis': `**Sub-5ms Caching Backplane**:
+We use high-performance Redis pipelines inline with endpoints.
+- **Cache Hit**: Data is returned in <5ms.
+- **Cache Miss**: Downstream servers process requests, caching payloads dynamically for configured TTLs.
+Rate checking executes asynchronously in the background.`,
 
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/&/g, '&amp;')
-              .replace(/</g, '&lt;')
-              .replace(/>/g, '&gt;')
-              .replace(/"/g, '&quot;')
-              .replace(/'/g, '&#039;');
+    'default': `**VCT Unified Gateway SDK**:
+Available Wrappers:
+- **LLM**: Rotates pools of OpenAI and Gemini credentials.
+- **Payments**: Splits vendor payments.
+- **Firebase**: Gateway verified auth.
+- **CDN**: Signed Cloudinary media links.
+- **Mail**: Resend template processor.
+- **Geo**: MapMyIndia suggested suggestions.
+
+Try typing "failsafe", "rotate", or "caching" to see specific details.`
+  };
+
+  // --- Initialize Lucide Icons ---
+  lucide.createIcons();
+
+  // --- Smooth Scroll using Lenis ---
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothWheel: true
+  });
+
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  // Link scroll navigation clicks to Lenis
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href');
+      const target = document.querySelector(targetId);
+      if (target) {
+        lenis.scrollTo(target);
+      }
+    });
+  });
+
+  // --- Custom Fluid Cursor ---
+  const cursor = document.getElementById('custom-cursor');
+  const cursorDot = document.getElementById('custom-cursor-dot');
+  
+  if (cursor && cursorDot) {
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let currentX = mouseX;
+    let currentY = mouseY;
+
+    window.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      
+      // Update dot position immediately
+      cursorDot.style.left = `${mouseX}px`;
+      cursorDot.style.top = `${mouseY}px`;
+    });
+
+    const tick = () => {
+      currentX += (mouseX - currentX) * 0.12;
+      currentY += (mouseY - currentY) * 0.12;
+      cursor.style.left = `${currentX}px`;
+      cursor.style.top = `${currentY}px`;
+      requestAnimationFrame(tick);
+    };
+    tick();
+
+    document.querySelectorAll('.clickable, a, button, input, select').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '48px';
+        cursor.style.height = '48px';
+        cursor.style.borderColor = 'rgba(0, 242, 254, 0.7)';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '32px';
+        cursor.style.height = '32px';
+        cursor.style.borderColor = 'rgba(0, 242, 254, 0.35)';
+      });
+    });
   }
 
-  // --- WebGL SideRays Component Ported from React Bits ---
+  // --- OGL-based WebGL SideRays Background Shader ---
   async function initSideRays(container, props = {}) {
     if (!container) return;
 
@@ -378,917 +407,422 @@ void main() {
     };
   }
 
-  let processUptimeSeconds = 0;
-  let isLogsPaused = false;
-  let wrappersListPopulated = false;
+  // --- Apple Floating Dock Fisheye Scaling ---
+  const dock = document.getElementById('floating-dock');
+  const dockItems = document.querySelectorAll('.dock-item');
 
-  // --- Custom Fluid Cursor stretching based on Velocity ---
-  const cursorCircle = document.getElementById('custom-cursor');
-  const cursorDot = document.getElementById('custom-cursor-dot');
+  if (dock && dockItems.length) {
+    dock.addEventListener('mousemove', e => {
+      const mouseX = e.clientX;
+      dockItems.forEach(item => {
+        const itemRect = item.getBoundingClientRect();
+        const itemCenterX = itemRect.left + itemRect.width / 2;
+        const distance = Math.abs(mouseX - itemCenterX);
+        
+        const maxDist = 140;
+        let scale = 1.0;
+        
+        if (distance < maxDist) {
+          const factor = (maxDist - distance) / maxDist;
+          scale = 1.0 + factor * 0.5;
+        }
 
-  let mouseX = 0, mouseY = 0;
-  let lastMouseX = 0, lastMouseY = 0;
-  let velocityX = 0, velocityY = 0;
-  let cursorSpeed = 0;
-  let cursorAngle = 0;
+        const calculatedSize = 40 * scale;
+        item.style.width = `${calculatedSize}px`;
+        item.style.height = `${calculatedSize}px`;
+      });
+    });
 
-  window.addEventListener("mousemove", (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+    dock.addEventListener('mouseleave', () => {
+      dockItems.forEach(item => {
+        item.style.width = '40px';
+        item.style.height = '40px';
+      });
+    });
+  }
+
+  // --- Bento Cards Cursor Spotlight Tracking ---
+  const cards = document.querySelectorAll('.precision-card');
+  cards.forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
   });
 
-  if (typeof gsap !== 'undefined') {
-    gsap.ticker.add(() => {
-      // Calculate cursor speed and angle
-      velocityX = mouseX - lastMouseX;
-      velocityY = mouseY - lastMouseY;
+  // --- Ask Anything AI Box Input Interactions ---
+  const askInput = document.getElementById('ask-anything-input');
+  const askBox = document.getElementById('ask-anything-box');
+  const askSubmitBtn = document.getElementById('ask-submit-btn');
+  const responseBox = document.getElementById('hero-response-box');
+  const responseText = document.getElementById('hero-response-text');
+  const closeResponseBtn = document.getElementById('close-response-btn');
+
+  if (askInput && askBox) {
+    askInput.addEventListener('focus', () => askBox.classList.add('focused'));
+    askInput.addEventListener('blur', () => askBox.classList.remove('focused'));
+
+    window.addEventListener('keydown', e => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        askInput.focus();
+      }
+    });
+
+    const triggerSubmit = () => {
+      const query = askInput.value.trim().toLowerCase();
+      if (!query) return;
+
+      responseBox.style.display = 'block';
+      responseText.textContent = '';
       
-      cursorSpeed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-      cursorAngle = Math.atan2(velocityY, velocityX) * 180 / Math.PI;
-
-      // Position inner dot instantly
-      if (cursorDot) {
-        gsap.set(cursorDot, {
-          x: mouseX,
-          y: mouseY,
-          xPercent: -50,
-          yPercent: -50
-        });
+      let responseStr = askAnythingResponses['default'];
+      for (const key of Object.keys(askAnythingResponses)) {
+        if (query.includes(key)) {
+          responseStr = askAnythingResponses[key];
+          break;
+        }
       }
 
-      // Stretch outer glass ring based on speed and rotate towards movement direction
-      if (cursorCircle) {
-        const isHovered = cursorCircle.classList.contains('hovered');
-        
-        // Base size logic
-        const baseScale = isHovered ? 2.0 : 1.0;
-        const maxStretch = isHovered ? 0.3 : 0.6;
-        
-        // Calculate stretch factors (more scaleX along path of motion, squash scaleY)
-        const stretch = Math.min(cursorSpeed * 0.015, maxStretch);
-        const scaleX = baseScale + stretch;
-        const scaleY = baseScale - (stretch * 0.6);
-
-        gsap.to(cursorCircle, {
-          x: mouseX,
-          y: mouseY,
-          xPercent: -50,
-          yPercent: -50,
-          rotation: cursorAngle,
-          scaleX: scaleX,
-          scaleY: scaleY,
-          duration: 0.25,
-          overwrite: "auto"
-        });
-      }
-
-      lastMouseX = mouseX;
-      lastMouseY = mouseY;
-    });
-  }
-
-  function setupCursorHoverHandlers() {
-    const clickables = document.querySelectorAll('.clickable');
-    clickables.forEach(elem => {
-      elem.addEventListener('mouseenter', () => {
-        if (cursorCircle) cursorCircle.classList.add('hovered');
-        if (cursorDot) cursorDot.classList.add('hovered');
-      });
-      elem.addEventListener('mouseleave', () => {
-        if (cursorCircle) cursorCircle.classList.remove('hovered');
-        if (cursorDot) cursorDot.classList.remove('hovered');
-      });
-    });
-  }
-
-  // --- Core Innovation: Reactive Ambient Background (ScrollTrigger) ---
-  function setupAmbientMutator() {
-    const orb1 = document.getElementById('ambient-orb-1');
-    const orb2 = document.getElementById('ambient-orb-2');
-    const orb3 = document.getElementById('ambient-orb-3');
-
-    if (!orb1 || !orb2 || !orb3 || typeof ScrollTrigger === 'undefined') return;
-
-    // Configs for ambient orb properties across sections
-    const states = {
-      'hero-section': {
-        orb1: { background: 'radial-gradient(circle, rgba(0, 242, 254, 0.25) 0%, transparent 70%)', top: '10%', left: '10%', scale: 1, opacity: 0.25 },
-        orb2: { background: 'radial-gradient(circle, rgba(226, 232, 240, 0.15) 0%, transparent 70%)', top: '20%', right: '15%', scale: 1.2, opacity: 0.2 },
-        orb3: { opacity: 0 }
-      },
-      'manifesto-section': {
-        orb1: { background: 'radial-gradient(circle, rgba(159, 122, 234, 0.15) 0%, transparent 70%)', top: '30%', left: '20%', scale: 1.1, opacity: 0.25 },
-        orb2: { background: 'radial-gradient(circle, rgba(66, 153, 225, 0.15) 0%, transparent 70%)', top: '15%', right: '30%', scale: 1.1, opacity: 0.2 },
-        orb3: { opacity: 0 }
-      },
-      'arsenal-section': {
-        orb1: { background: 'radial-gradient(circle, rgba(159, 122, 234, 0.25) 0%, transparent 70%)', top: '30%', left: '5%', scale: 1.2, opacity: 0.3 },
-        orb2: { background: 'radial-gradient(circle, rgba(66, 153, 225, 0.25) 0%, transparent 70%)', top: '40%', right: '5%', scale: 1.2, opacity: 0.25 },
-        orb3: { background: 'radial-gradient(circle, rgba(244, 63, 94, 0.2) 0%, transparent 70%)', top: '50%', left: '40%', scale: 1.0, opacity: 0.2 }
-      },
-      'vault-section': {
-        orb1: { background: 'radial-gradient(circle, rgba(67, 56, 202, 0.25) 0%, transparent 70%)', top: '20%', left: '30%', scale: 1.3, opacity: 0.25 },
-        orb2: { opacity: 0.05, top: '40%', right: '10%' },
-        orb3: { opacity: 0.05, top: '50%', left: '10%' }
-      },
-      'velocity-section': {
-        orb1: { background: 'radial-gradient(circle, rgba(0, 180, 255, 0.3) 0%, transparent 70%)', top: '15%', left: '20%', scale: 1.2, opacity: 0.3 },
-        orb2: { background: 'radial-gradient(circle, rgba(52, 199, 89, 0.25) 0%, transparent 70%)', top: '50%', left: '60%', scale: 1.1, opacity: 0.25 },
-        orb3: { opacity: 0 }
-      },
-      'sandbox-section': {
-        orb1: { opacity: 0.02 },
-        orb2: { opacity: 0.02 },
-        orb3: { opacity: 0.02 }
-      },
-      'ironclad-section': {
-        orb1: { background: 'radial-gradient(circle, rgba(0, 242, 254, 0.15) 0%, transparent 70%)', top: '20%', left: '15%', scale: 1.1, opacity: 0.2 },
-        orb2: { background: 'radial-gradient(circle, rgba(226, 232, 240, 0.1) 0%, transparent 70%)', top: '50%', right: '20%', scale: 1.0, opacity: 0.15 },
-        orb3: { opacity: 0 }
-      },
-      'zenith-section': {
-        orb1: { background: 'radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, transparent 60%)', top: '50%', left: '50%', scale: 1.2, opacity: 0.5, xPercent: -50, yPercent: -50 },
-        orb2: { opacity: 0 },
-        orb3: { opacity: 0 }
-      }
+      let charIdx = 0;
+      const typeInterval = setInterval(() => {
+        if (charIdx < responseStr.length) {
+          responseText.textContent += responseStr.charAt(charIdx);
+          charIdx++;
+        } else {
+          clearInterval(typeInterval);
+        }
+      }, 10);
     };
 
-    Object.keys(states).forEach(sectionId => {
-      const section = document.getElementById(sectionId);
-      if (!section) return;
-
-      const config = states[sectionId];
-
-      ScrollTrigger.create({
-        trigger: section,
-        start: 'top 60%',
-        end: 'bottom 40%',
-        onEnter: () => applyState(config),
-        onEnterBack: () => applyState(config)
-      });
+    askSubmitBtn.addEventListener('click', triggerSubmit);
+    askInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        triggerSubmit();
+      }
     });
 
-    function applyState(cfg) {
-      if (cfg.orb1) gsap.to(orb1, { ...cfg.orb1, duration: 1.8, ease: "power2.out", overwrite: "auto" });
-      if (cfg.orb2) gsap.to(orb2, { ...cfg.orb2, duration: 1.8, ease: "power2.out", overwrite: "auto" });
-      if (cfg.orb3) gsap.to(orb3, { ...cfg.orb3, duration: 1.8, ease: "power2.out", overwrite: "auto" });
-    }
-  }
-
-  // --- Glass Refraction Mouse Movements ---
-  function setupHoverPhysics() {
-    const liquidGlassElements = document.querySelectorAll('.liquid-glass');
-    liquidGlassElements.forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const cardCenterX = rect.left + rect.width / 2;
-        const cardCenterY = rect.top + rect.height / 2;
-        const offsetX = e.clientX - cardCenterX;
-        const offsetY = e.clientY - cardCenterY;
-
-        if (typeof gsap !== 'undefined') {
-          gsap.to('#ambient-orb-1', { x: offsetX * 0.1, y: offsetY * 0.1, duration: 0.8, ease: "power2.out", overwrite: "auto" });
-          gsap.to('#ambient-orb-2', { x: -offsetX * 0.08, y: -offsetY * 0.08, duration: 0.8, ease: "power2.out", overwrite: "auto" });
-        }
-      });
-
-      card.addEventListener('mouseleave', () => {
-        if (typeof gsap !== 'undefined') {
-          gsap.to('#ambient-orb-1', { x: 0, y: 0, duration: 1.2, ease: "power3.out", overwrite: "auto" });
-          gsap.to('#ambient-orb-2', { x: 0, y: 0, duration: 1.2, ease: "power3.out", overwrite: "auto" });
-        }
-      });
-    });
-  }
-
-  // --- 3D Bento Card Tilt Effect ---
-  function setupBentoTilt() {
-    const bentoCards = document.querySelectorAll('.bento-card');
-    bentoCards.forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        const normX = (x / rect.width) - 0.5;
-        const normY = (y / rect.height) - 0.5;
-        
-        const tiltX = -normY * 15;
-        const tiltY = normX * 15;
-
-        card.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
-        card.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
-
-        if (typeof gsap !== 'undefined') {
-          gsap.to(card, {
-            transform: `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-2px)`,
-            duration: 0.3,
-            ease: "power2.out",
-            overwrite: "auto"
-          });
-        }
-      });
-
-      card.addEventListener('mouseleave', () => {
-        card.style.setProperty('--mouse-x', '90%');
-        card.style.setProperty('--mouse-y', '10%');
-
-        if (typeof gsap !== 'undefined') {
-          gsap.to(card, {
-            transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)',
-            duration: 0.5,
-            ease: "power3.out",
-            overwrite: "auto"
-          });
-        }
-      });
-    });
-  }
-
-  // --- Word-By-Word Reveal (Manifesto Section) ---
-  function setupWordReveal() {
-    const textEl = document.getElementById('manifesto-text');
-    if (textEl && typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-      const words = textEl.textContent.trim().split(/\s+/);
-      textEl.innerHTML = words.map(w => `<span>${w}</span>`).join(' ');
-
-      const spans = textEl.querySelectorAll('span');
-      gsap.fromTo(spans,
-        { opacity: 0.08 },
-        {
-          opacity: 1,
-          stagger: 0.15,
-          scrollTrigger: {
-            trigger: '#manifesto-section',
-            start: 'top 70%',
-            end: 'bottom 40%',
-            scrub: true
-          }
-        }
-      );
-    }
-  }
-
-  // --- Edge Velocity Data Streaks Trigger ---
-  function setupDataStreaks() {
-    const velocitySection = document.getElementById('velocity-section');
-    if (velocitySection && typeof ScrollTrigger !== 'undefined') {
-      ScrollTrigger.create({
-        trigger: velocitySection,
-        start: 'top 70%',
-        onEnter: () => {
-          document.querySelectorAll('.data-packet').forEach(p => p.classList.add('streak'));
-        },
-        onLeaveBack: () => {
-          document.querySelectorAll('.data-packet').forEach(p => p.classList.remove('streak'));
-        }
+    if (closeResponseBtn) {
+      closeResponseBtn.addEventListener('click', () => {
+        responseBox.style.display = 'none';
+        responseText.textContent = '';
       });
     }
   }
 
-  // --- Vitest Circle Coverage Trigger ---
-  function setupVitestCoverage() {
-    const ironcladSection = document.getElementById('ironclad-section');
-    if (ironcladSection && typeof ScrollTrigger !== 'undefined') {
-      ScrollTrigger.create({
-        trigger: ironcladSection,
-        start: 'top 70%',
-        onEnter: () => {
-          const progressFill = document.querySelector('.progress-ring-fill');
-          if (progressFill) {
-            progressFill.style.strokeDashoffset = '0';
-          }
-        },
-        onLeaveBack: () => {
-          const progressFill = document.querySelector('.progress-ring-fill');
-          if (progressFill) {
-            progressFill.style.strokeDashoffset = '251.2';
-          }
-        }
-      });
-    }
-  }
+  // --- Live Metrics Ticker Increments & Oscillations ---
+  const reqMetric = document.getElementById('metric-requests');
+  const cacheMetric = document.getElementById('metric-cache');
+  const latMetric = document.getElementById('metric-latency');
 
-  // --- Sandbox Autotyping Terminal Simulation (PINS in viewport) ---
-  function setupSandboxTyping() {
-    const terminalScreen = document.getElementById('sandbox-terminal-screen');
-    const isLandingPage = !window.location.pathname.includes('dashboard.html');
+  if (reqMetric && cacheMetric && latMetric) {
+    let baseRequests = 1248390;
     
-    if (terminalScreen && isLandingPage && typeof ScrollTrigger !== 'undefined') {
-      const codePayloadText = `curl -X POST http://localhost:4000/llm/v1/chat \\
-  -H "x-api-key: boss123" \\
-  -d '{ "messages": [{"role": "user", "content": "Explain failover"}] }'
+    setInterval(() => {
+      // Oscillate requests handled
+      baseRequests += Math.floor(Math.random() * 4) + 1;
+      reqMetric.textContent = baseRequests.toLocaleString();
 
-# [MOCK-INFO] OpenAI returned 429 rate limit. Key rotated...
-# [MOCK-SUCCESS] Primary failed -> Gemini fallback active.
-{
-  "ok": true,
-  "data": {
-    "provider": "gemini",
-    "model": "gemini-1.5-flash",
-    "content": "Standby Gemini fallback responded in 204ms."
+      // Oscillate latency slightly
+      const latencyOsc = (3.8 + Math.random() * 0.9).toFixed(1);
+      latMetric.textContent = `${latencyOsc}ms`;
+
+      // Oscillate cache ratio
+      const cacheOsc = (97.8 + Math.random() * 1.1).toFixed(1);
+      cacheMetric.textContent = `${cacheOsc}%`;
+    }, 2800);
   }
-}`;
 
-      let typingTriggered = false;
+  // --- Visual Configurator SDK Playground (Section 2.5) ---
+  const configService = document.getElementById('config-service');
+  const toggleCache = document.getElementById('toggle-cache');
+  const toggleFallback = document.getElementById('toggle-fallback');
+  const configRetry = document.getElementById('config-retry');
+  const sliderVal = document.getElementById('slider-val');
+  const codeDisplay = document.getElementById('playground-code-display');
 
-      // Pin terminal section in viewport on scroll-in
-      ScrollTrigger.create({
-        trigger: '#sandbox-section',
-        start: 'top 30%',
-        end: '+=400',
-        pin: true,
-        pinSpacing: true,
-        onEnter: () => {
-          if (typingTriggered) return;
-          typingTriggered = true;
-          terminalScreen.innerHTML = '';
-          
-          let index = 0;
-          function typeChar() {
-            if (index < codePayloadText.length) {
-              terminalScreen.textContent += codePayloadText.charAt(index);
-              index++;
-              
-              if (index % 6 === 0 || index === codePayloadText.length) {
-                if (typeof Prism !== 'undefined') {
-                  Prism.highlightElement(terminalScreen);
-                }
-              }
-              setTimeout(typeChar, 10);
-            }
-          }
-          typeChar();
-        }
+  if (configService && toggleCache && toggleFallback && configRetry && codeDisplay) {
+    
+    // Toggle clicks
+    [toggleCache, toggleFallback].forEach(tgl => {
+      tgl.addEventListener('click', () => {
+        tgl.classList.toggle('active');
+        compileSDKCode();
       });
-    }
+    });
+
+    // Slider inputs
+    configRetry.addEventListener('input', () => {
+      sliderVal.textContent = `${configRetry.value}ms`;
+      compileSDKCode();
+    });
+
+    // Dropdown change
+    configService.addEventListener('change', () => {
+      compileSDKCode();
+    });
+
+    const compileSDKCode = () => {
+      const activeService = configService.value;
+      const isCacheOn = toggleCache.classList.contains('active');
+      const isFallbackOn = toggleFallback.classList.contains('active');
+      const retryMs = configRetry.value;
+
+      let subMethod = 'chat';
+      let params = `  messages: [{ role: 'user', content: 'Failsafe test payload' }]`;
+      if (activeService === 'pay') {
+        subMethod = 'createOrder';
+        params = `  amount: 15000,\n  currency: 'INR'`;
+      } else if (activeService === 'fb') {
+        subMethod = 'verifyAuth';
+        params = `  idToken: 'auth-header-key-abc'`;
+      } else if (activeService === 'cdn') {
+        subMethod = 'signUrl';
+        params = `  publicId: 'vct_logo',\n  expires: 3600`;
+      } else if (activeService === 'mail') {
+        subMethod = 'sendMail';
+        params = `  to: 'dev@vct.tech',\n  subject: 'Test email'`;
+      } else if (activeService === 'geo') {
+        subMethod = 'geocode';
+        params = `  address: 'Mumbai, MH'`;
+      }
+
+      const generatedCode = `// 🚀 Compiled Client SDK Setup Configuration
+import { VCTGateway } from 'vct-wrapped-sdk';
+
+const gateway = new VCTGateway({
+  apiKey: process.env.VCT_SECRET_KEY,
+  retryDelayMs: ${retryMs},
+  enableRedisCache: ${isCacheOn},
+  automaticFailover: ${isFallbackOn}
+});
+
+// Dispatch request via ${activeService.toUpperCase()} Wrapper
+const response = await gateway.${activeService}.${subMethod}({
+${params}
+});
+
+console.log('${activeService.toUpperCase()} response success:', response.ok);`;
+
+      codeDisplay.textContent = generatedCode;
+      Prism.highlightElement(codeDisplay);
+    };
+
+    // Compile initially
+    compileSDKCode();
   }
 
-  // --- Real Sandbox Execution (Playground Panel) ---
-  async function executeDashboardSandboxRequest() {
-    const selectService = document.getElementById('select-playground-service');
-    const endpointInput = document.getElementById('sandbox-endpoint');
-    const apiKeyInput = document.getElementById('sandbox-api-key');
-    const textareaBody = document.getElementById('sandbox-request-payload');
-    const screen = document.getElementById('sandbox-terminal-screen');
-    const statusVal = document.getElementById('val-sandbox-status');
-
-    if (!endpointInput || !screen || !statusVal) return;
-
-    const service = selectService ? selectService.value : 'llm';
-    const endpoint = endpointInput.value;
-    const apiKey = apiKeyInput ? apiKeyInput.value : '';
-    const preset = servicesConfig[service];
-    const method = preset ? preset.method : 'POST';
-
-    let bodyPayload = null;
-    try {
-      if (textareaBody && textareaBody.value.trim() !== '') {
-        bodyPayload = JSON.parse(textareaBody.value);
-      }
-    } catch (err) {
-      statusVal.className = 'status-pill status-error';
-      statusVal.innerText = 'JSON Error';
-      screen.innerHTML = `[ERROR] Invalid JSON payload configuration:\n${err.message}\n\nPlease check JSON syntax before executing.`;
-      return;
-    }
-
-    statusVal.className = 'status-pill status-online';
-    statusVal.innerText = 'sending...';
-    screen.innerHTML = `[INFO] Issuing actual request to: ${method} ${endpoint}\n`;
-    screen.innerHTML += `[INFO] x-api-key: ${apiKey ? '••••' + apiKey.slice(-3) : 'None'}\n`;
-    screen.innerHTML += `Connecting to server...\n\n`;
-
-    appendDashboardTelemetryLog('info', `Console Trigger: ${method} ${endpoint}`);
-
-    try {
-      const fetchOptions = {
-        method: method,
-        headers: { 'Content-Type': 'application/json' }
-      };
-
-      if (apiKey) {
-        fetchOptions.headers['x-api-key'] = apiKey;
-      }
-
-      let finalEndpoint = endpoint;
-      if (method === 'GET' && bodyPayload) {
-        const queryParams = new URLSearchParams(bodyPayload).toString();
-        finalEndpoint = `${endpoint}?${queryParams}`;
-      } else if (method !== 'GET' && bodyPayload) {
-        fetchOptions.body = JSON.stringify(bodyPayload);
-      }
-
-      const response = await fetch(finalEndpoint, fetchOptions);
-      const data = await response.json();
-
-      statusVal.innerText = `${response.status} ${response.statusText}`;
-      if (response.ok) {
-        statusVal.className = 'status-pill status-online';
-        appendDashboardTelemetryLog('info', `Console Success: ${method} ${endpoint} -> ${response.status} OK`);
+  // --- Dynamic Uptime Bars Matrix Generation (Section 3.5) ---
+  const uptimeContainers = document.querySelectorAll('.uptime-bars-container');
+  uptimeContainers.forEach(container => {
+    container.innerHTML = '';
+    for (let i = 0; i < 36; i++) {
+      const bar = document.createElement('div');
+      bar.classList.add('uptime-bar');
+      
+      // Inject minor realistic outages (downtime class) in 2% of bars
+      if (Math.random() > 0.97) {
+        bar.classList.add('downtime');
+        bar.title = 'Uptime: 99.4% (Minor latency resolved at upstream)';
       } else {
-        statusVal.className = 'status-pill status-error';
-        appendDashboardTelemetryLog('error', `Console Error: ${method} ${endpoint} -> ${response.status} ${response.statusText}`);
+        bar.classList.add('operational');
+        bar.title = 'Uptime: 100% (Fully Operational)';
       }
-
-      screen.innerHTML = JSON.stringify(data, null, 2);
-      if (typeof Prism !== 'undefined') {
-        Prism.highlightElement(screen);
-      }
-      screen.scrollTop = screen.scrollHeight;
-    } catch (error) {
-      statusVal.className = 'status-pill status-error';
-      statusVal.innerText = 'Network Fail';
-      screen.innerHTML = `[NETWORK ERROR] Connection refused or timed out:\n${error.message}`;
-      appendDashboardTelemetryLog('error', `Console Network Fail: ${method} ${endpoint} -> ${error.message}`);
+      container.appendChild(bar);
     }
-  }
-
-  function applyPlaygroundServicePreset(serviceId) {
-    const preset = servicesConfig[serviceId];
-    const endpointInput = document.getElementById('sandbox-endpoint');
-    const methodBadge = document.getElementById('console-method-badge');
-    const textareaBody = document.getElementById('sandbox-request-payload');
-    const screen = document.getElementById('sandbox-terminal-screen');
-    const statusVal = document.getElementById('val-sandbox-status');
-
-    if (!preset) return;
-
-    if (endpointInput) endpointInput.value = preset.endpoint;
-    if (methodBadge) {
-      methodBadge.innerText = preset.method;
-    }
-    if (textareaBody) {
-      textareaBody.value = JSON.stringify(preset.payload, null, 2);
-    }
-    if (screen) {
-      screen.innerHTML = `// Ready to sandbox ${preset.name}.\n// Click 'EXECUTE REAL REQUEST' to query local Express API gateway.`;
-    }
-    if (statusVal) {
-      statusVal.className = 'status-pill status-online';
-      statusVal.innerText = 'idle';
-    }
-  }
-
-  // --- Telemetry Log Stream ---
-  const dashboardLogsScreen = document.getElementById('dashboard-logs-screen');
-
-  function appendDashboardTelemetryLog(level, msg) {
-    if (!dashboardLogsScreen || isLogsPaused) return;
-
-    const logDiv = document.createElement('div');
-    logDiv.className = 'log-entry animate-fade-in';
-    const levelClass = level === 'warn' ? 'level-warn' : level === 'error' ? 'level-error' : 'level-info';
-
-    logDiv.innerHTML = `
-      <span class="log-timestamp">${getTimestamp()}</span>
-      <span class="log-level ${levelClass}">${level}</span>
-      <span class="log-message">${escapeHtml(msg)}</span>
-    `;
-
-    dashboardLogsScreen.appendChild(logDiv);
-    dashboardLogsScreen.scrollTop = dashboardLogsScreen.scrollHeight;
-
-    if (dashboardLogsScreen.children.length > 50) {
-      dashboardLogsScreen.removeChild(dashboardLogsScreen.firstChild);
-    }
-  }
-
-  function initializeMockLogs() {
-    for (let i = 0; i < 6; i++) {
-      const idx = Math.floor(Math.random() * mockLogTemplates.length);
-      const log = mockLogTemplates[idx];
-      appendDashboardTelemetryLog(log.level, log.msg);
-    }
-  }
-
-  // --- Gateway Health & Diagnostics Uptime Updates ---
-  const healthStatusVal = document.getElementById('val-health-status');
-
-  async function fetchServerDiagnostics() {
-    try {
-      const response = await fetch('/health');
-      const data = await response.json();
-
-      if (data.ok && data.data) {
-        if (healthStatusVal) healthStatusVal.innerText = 'Healthy';
-        const globalHealthPill = document.getElementById('global-health-pill');
-        if (globalHealthPill) {
-          globalHealthPill.className = 'status-pill status-online';
-        }
-        const valHealth = document.getElementById('val-health');
-        if (valHealth) {
-          valHealth.innerText = 'Healthy';
-          valHealth.style.color = 'var(--success)';
-        }
-
-        if (data.data.uptime) {
-          processUptimeSeconds = data.data.uptime;
-        }
-
-        populateActiveWrappersList();
-      }
-    } catch (err) {
-      if (healthStatusVal) healthStatusVal.innerText = 'Degraded';
-      const globalHealthPill = document.getElementById('global-health-pill');
-      if (globalHealthPill) {
-        globalHealthPill.className = 'status-pill status-error';
-      }
-      const valHealth = document.getElementById('val-health');
-      if (valHealth) {
-        valHealth.innerText = 'Degraded';
-        valHealth.style.color = 'var(--error)';
-      }
-    }
-  }
-
-  function startUptimeCounter() {
-    const globalUptime = document.getElementById('global-uptime-counter');
-    const dashboardUptime = document.getElementById('val-dashboard-uptime');
-    
-    setInterval(() => {
-      processUptimeSeconds++;
-      const formatted = formatUptime(processUptimeSeconds);
-      if (globalUptime) {
-        globalUptime.innerText = `Uptime: ${formatted}`;
-      }
-      if (dashboardUptime) {
-        dashboardUptime.innerText = formatted;
-      }
-    }, 1000);
-  }
-
-  function formatUptime(seconds) {
-    if (seconds < 60) return `${seconds}s`;
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    if (mins < 60) return `${mins}m ${secs}s`;
-    const hrs = Math.floor(mins / 60);
-    const remainingMins = mins % 60;
-    return `${hrs}h ${remainingMins}m ${secs}s`;
-  }
-
-  // --- Dynamic Wrappers Catalog Populator ---
-  async function populateActiveWrappersList() {
-    if (wrappersListPopulated) return;
-    const servicesList = document.getElementById('dashboard-services-list');
-    if (!servicesList) return;
-
-    try {
-      const response = await fetch('/wrappers');
-      const data = await response.json();
-
-      if (data.ok && data.data && data.data.wrappers) {
-        servicesList.innerHTML = '';
-        data.data.wrappers.forEach(w => {
-          const row = document.createElement('div');
-          row.className = 'service-row';
-          row.innerHTML = `
-            <div class="service-row-info">
-              <div style="font-weight: 600; color: #fff;">${escapeHtml(w.name)} Wrapper</div>
-              <div style="font-size: 11px; color: var(--text-secondary);">${escapeHtml(w.description)}</div>
-            </div>
-            <div class="service-status-pill status-online">
-              <span class="status-dot"></span>
-              ONLINE
-            </div>
-          `;
-          servicesList.appendChild(row);
-        });
-        wrappersListPopulated = true;
-      }
-    } catch (err) {
-      servicesList.innerHTML = `<div style="color: var(--error); font-size: 13px;">Failed to load wrappers catalog.</div>`;
-    }
-  }
-
-  // --- Dynamic Key Rotation Pool ---
-  const keysContainer = document.getElementById('dashboard-keys-pool');
-  const activeKeysData = [
-    { provider: 'OpenAI API Key (Primary LLM)', status: 'Active', mask: 'sk-proj-••••••••••••••••3dE9', prefix: 'sk-proj-' },
-    { provider: 'Gemini API Key (Secondary Fallback)', status: 'Standby', mask: 'AIzaSy••••••••••••••••8wNq', prefix: 'AIzaSy' },
-    { provider: 'Resend SMTP Mail API Key', status: 'Active', mask: 're_••••••••••••••••K2p9', prefix: 're_' }
-  ];
-
-  function renderKeysRotationPool() {
-    if (!keysContainer) return;
-    keysContainer.innerHTML = '';
-
-    activeKeysData.forEach((k, index) => {
-      const card = document.createElement('div');
-      card.className = 'key-card';
-      card.innerHTML = `
-        <div class="key-card-header">
-          <span class="key-title">${k.provider}</span>
-          <span class="key-badge active">${k.status}</span>
-        </div>
-        <div class="key-value-container">
-          <span class="key-value" id="key-value-${index}">${k.mask}</span>
-          <button class="btn-icon clickable" id="btn-rotate-${index}" title="Rotate Key Now">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-          </button>
-        </div>
-      `;
-      keysContainer.appendChild(card);
-
-      const rotateBtn = card.querySelector(`#btn-rotate-${index}`);
-      const valSpan = card.querySelector(`#key-value-${index}`);
-      const badgeSpan = card.querySelector(`.key-badge`);
-
-      if (rotateBtn && valSpan && badgeSpan) {
-        rotateBtn.addEventListener('click', () => {
-          badgeSpan.innerText = 'Rotating...';
-          badgeSpan.style.backgroundColor = 'rgba(245, 158, 11, 0.08)';
-          badgeSpan.style.color = '#f59e0b';
-          badgeSpan.style.borderColor = 'rgba(245, 158, 11, 0.15)';
-
-          appendDashboardTelemetryLog('info', `Credential Pool: Rotating key for ${k.provider}`);
-
-          setTimeout(() => {
-            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
-            let suffix = '';
-            for (let i = 0; i < 4; i++) {
-              suffix += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            valSpan.innerText = `${k.prefix}••••••••••••••••${suffix}`;
-            badgeSpan.innerText = k.status;
-            badgeSpan.removeAttribute('style');
-            appendDashboardTelemetryLog('info', `Credential Pool: Successfully rotated ${k.provider}. New config loaded.`);
-          }, 1000);
-        });
-      }
-    });
-
-    setupCursorHoverHandlers();
-  }
-
-  // --- Initializer Routing ---
-  window.addEventListener('DOMContentLoaded', () => {
-    // Setup Lucide icons if available
-    if (typeof lucide !== 'undefined') {
-      lucide.createIcons();
-    }
-
-    const sidebarItems = document.querySelectorAll('.sidebar-item');
-    const tabPanels = document.querySelectorAll('.dashboard-tab-panel');
-
-    function switchTab(tabId) {
-      sidebarItems.forEach(item => {
-        item.classList.toggle('active', item.getAttribute('data-tab') === tabId);
-      });
-      
-      tabPanels.forEach(panel => {
-        if (panel.id === `panel-${tabId}`) {
-          panel.classList.add('active');
-          panel.style.display = 'block';
-
-          // Premium tab transitions using anime.js or GSAP
-          if (typeof anime !== 'undefined') {
-            anime({
-              targets: panel.querySelectorAll('.animated-card, .dashboard-header, .console-viewport, .keys-grid-dashboard, .logs-panel-full'),
-              opacity: [0, 1],
-              translateY: [15, 0],
-              duration: 600,
-              delay: anime.stagger(60),
-              easing: 'easeOutQuad'
-            });
-          } else if (typeof gsap !== 'undefined') {
-            gsap.fromTo(panel.children,
-              { opacity: 0, y: 15 },
-              { opacity: 1, y: 0, duration: 0.6, ease: "power3.out", stagger: 0.08 }
-            );
-          }
-        } else {
-          panel.classList.remove('active');
-          panel.style.display = 'none';
-        }
-      });
-    }
-
-    sidebarItems.forEach(item => {
-      item.addEventListener('click', () => {
-        const tabId = item.getAttribute('data-tab');
-        switchTab(tabId);
-        const url = new URL(window.location);
-        url.searchParams.set('tab', tabId);
-        window.history.pushState({}, '', url);
-      });
-    });
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const isDashboard = window.location.pathname.includes('dashboard.html');
-    const defaultTab = isDashboard ? 'overview' : 'home';
-    const initialTab = urlParams.get('tab') || defaultTab;
-    
-    // Switch to initial tab if on dashboard
-    if (isDashboard) {
-      switchTab(initialTab);
-    }
-
-    // --- Interactive Bento cards mouse shifts ---
-    const bentoCards = document.querySelectorAll('.bento-card');
-    bentoCards.forEach(card => {
-      card.addEventListener('click', () => {
-        const serviceId = card.getAttribute('data-service');
-        if (!serviceId) return;
-
-        const selectPlaygroundService = document.getElementById('select-playground-service');
-        if (selectPlaygroundService) {
-          selectPlaygroundService.value = serviceId;
-          applyPlaygroundServicePreset(serviceId);
-          switchTab('playground');
-        } else {
-          window.location.href = `/dashboard.html?tab=playground&service=${serviceId}`;
-        }
-      });
-    });
-
-    // Populate service preset if service parameter exists in URL
-    const serviceParam = urlParams.get('service');
-    const selectPlaygroundService = document.getElementById('select-playground-service');
-    if (selectPlaygroundService) {
-      selectPlaygroundService.addEventListener('change', (e) => {
-        applyPlaygroundServicePreset(e.target.value);
-      });
-      
-      const activePresetId = serviceParam || selectPlaygroundService.value;
-      selectPlaygroundService.value = activePresetId;
-      applyPlaygroundServicePreset(activePresetId);
-    }
-
-    // --- Executer buttons ---
-    const btnExecute = document.getElementById('btn-execute-sandbox');
-    if (btnExecute) {
-      btnExecute.addEventListener('click', executeDashboardSandboxRequest);
-    }
-
-    // --- Toggle Sandbox Key Visibility ---
-    const toggleSandboxKeyBtn = document.getElementById('btn-toggle-sandbox-key');
-    const sandboxApiKeyInput = document.getElementById('sandbox-api-key');
-    if (toggleSandboxKeyBtn && sandboxApiKeyInput) {
-      toggleSandboxKeyBtn.addEventListener('click', () => {
-        const type = sandboxApiKeyInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        sandboxApiKeyInput.setAttribute('type', type);
-      });
-    }
-
-    // --- Logs Console Actions ---
-    const btnPauseLogs = document.getElementById('btn-dashboard-pause-logs');
-    const btnClearLogs = document.getElementById('btn-dashboard-clear-logs');
-    if (btnPauseLogs) {
-      btnPauseLogs.addEventListener('click', () => {
-        isLogsPaused = !isLogsPaused;
-        btnPauseLogs.innerText = isLogsPaused ? 'Resume Stream' : 'Pause Stream';
-        btnPauseLogs.classList.toggle('btn-accent', isLogsPaused);
-      });
-    }
-    if (btnClearLogs) {
-      btnClearLogs.addEventListener('click', () => {
-        if (dashboardLogsScreen) dashboardLogsScreen.innerHTML = '';
-      });
-    }
-
-    // --- Copy Code Command on Landing Page ---
-    const btnCopyCode = document.getElementById('btn-copy-code');
-    if (btnCopyCode) {
-      btnCopyCode.addEventListener('click', () => {
-        const codeElement = document.querySelector('#sandbox-terminal-screen');
-        if (codeElement) {
-          const text = codeElement.innerText;
-          navigator.clipboard.writeText(text).then(() => {
-            btnCopyCode.setAttribute('title', 'Copied!');
-            if (typeof lucide !== 'undefined') {
-              btnCopyCode.innerHTML = '<i data-lucide="check" style="color: var(--success); width: 14px; height: 14px;"></i>';
-              lucide.createIcons();
-            }
-            setTimeout(() => {
-              btnCopyCode.setAttribute('title', 'Copy Command');
-              if (typeof lucide !== 'undefined') {
-                btnCopyCode.innerHTML = '<i data-lucide="copy" class="copy-icon" style="width: 14px; height: 14px;"></i>';
-                lucide.createIcons();
-              }
-            }, 2000);
-          });
-        }
-      });
-    }
-
-    // Run diagnostics, key pool, hover physics, tilt, text, typing, and timers
-    fetchServerDiagnostics();
-    renderKeysRotationPool();
-    setupHoverPhysics();
-    setupBentoTilt();
-    setupWordReveal();
-    setupDataStreaks();
-    setupVitestCoverage();
-    setupSandboxTyping();
-    setupAmbientMutator();
-    startUptimeCounter();
-
-    const raysContainer = document.getElementById('hero-side-rays');
-    if (raysContainer) {
-      initSideRays(raysContainer, {
-        speed: 2.5,
-        rayColor1: '#EAB308',
-        rayColor2: '#96c8ff',
-        intensity: 2,
-        spread: 2,
-        origin: 'top-right',
-        tilt: 0,
-        saturation: 1.5,
-        blend: 0.75,
-        falloff: 1.6,
-        opacity: 1.0
-      });
-    }
-
-    if (isDashboard) {
-      initializeMockLogs();
-    }
-
-    // --- 3D Parallax Speeds & Scroll Reveals using GSAP & ScrollTrigger ---
-    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-      gsap.registerPlugin(ScrollTrigger);
-
-      // 3D Parallax Speeds
-      gsap.utils.toArray('[data-speed]').forEach(el => {
-        const speed = parseFloat(el.getAttribute('data-speed')) || 1.0;
-        const amount = (speed - 1) * 180; // Parallax vertical displacement multiplier
-
-        gsap.to(el, {
-          y: amount,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true
-          }
-        });
-      });
-
-      // Staggered reveals for all section headers and cards
-      const sectionsToReveal = [
-        '.section-hero',
-        '#manifesto-section',
-        '#arsenal-section',
-        '#vault-section',
-        '#velocity-section',
-        '#sandbox-section',
-        '#ironclad-section',
-        '#zenith-section'
-      ];
-
-      sectionsToReveal.forEach(sel => {
-        const container = document.querySelector(sel);
-        if (!container) return;
-
-        gsap.fromTo(container.querySelectorAll('.reveal-elem'),
-          { opacity: 0, y: 50, scale: 0.96 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 1.0,
-            ease: "power3.out",
-            stagger: 0.12,
-            scrollTrigger: {
-              trigger: container,
-              start: 'top 75%',
-              toggleActions: 'play none none none'
-            }
-          }
-        );
-      });
-    }
-
-    // --- Lenis Hijack Smooth Scroll ---
-    if (typeof Lenis !== 'undefined') {
-      const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true
-      });
-
-      function raf(time) {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-      }
-      requestAnimationFrame(raf);
-    }
-
-    // Sync Server Diagnostics
-    setInterval(fetchServerDiagnostics, 10000);
-
-    // Mock logs loop
-    setInterval(() => {
-      if (Math.random() < 0.25) {
-        const idx = Math.floor(Math.random() * mockLogTemplates.length);
-        const log = mockLogTemplates[idx];
-        appendDashboardTelemetryLog(log.level, log.msg);
-      }
-    }, 2000);
-
-    setupCursorHoverHandlers();
   });
+
+  // --- FAQ Accordion Collapsible toggles (Section 4.5) ---
+  const faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(item => {
+    const question = item.querySelector('.faq-question');
+    if (question) {
+      question.addEventListener('click', () => {
+        // Toggle active FAQ card
+        const isOpen = item.classList.contains('open');
+        
+        // Close others
+        faqItems.forEach(fit => fit.classList.remove('open'));
+
+        if (!isOpen) {
+          item.classList.add('open');
+        }
+      });
+    }
+  });
+
+  // --- GSAP Scroll Trigger Animations ---
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Reveal elements with perspective rotation & slide
+  const revealElements = document.querySelectorAll('.reveal-elem');
+  revealElements.forEach(elem => {
+    const customSpeed = parseFloat(elem.getAttribute('data-speed')) || 1.0;
+    
+    gsap.fromTo(elem, {
+      opacity: 0,
+      y: 50 * customSpeed,
+      rotationX: -10,
+      transformPerspective: 1200
+    }, {
+      opacity: 1,
+      y: 0,
+      rotationX: 0,
+      duration: 1.2,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: elem,
+        start: 'top 90%',
+        toggleActions: 'play none none none'
+      }
+    });
+  });
+
+  // --- SVG Data Flow Pipeline Animation (Section 3) ---
+  const flowSection = document.querySelector('.section-data-flow');
+  const flowActivePath = document.getElementById('flow-line-active');
+  const flowDot = document.getElementById('data-packet-dot');
+
+  if (flowSection && flowActivePath) {
+    gsap.to(flowActivePath, {
+      strokeDashoffset: 0,
+      scrollTrigger: {
+        trigger: flowSection,
+        start: 'top 35%',
+        end: 'bottom 65%',
+        scrub: 1
+      }
+    });
+
+    gsap.fromTo(flowDot, {
+      top: '0%',
+      opacity: 0
+    }, {
+      top: '100%',
+      opacity: 1,
+      scrollTrigger: {
+        trigger: flowSection,
+        start: 'top 35%',
+        end: 'bottom 65%',
+        scrub: 0.5,
+        onEnter: () => { flowDot.style.opacity = 1; },
+        onLeave: () => { flowDot.style.opacity = 0; },
+        onEnterBack: () => { flowDot.style.opacity = 1; },
+        onLeaveBack: () => { flowDot.style.opacity = 0; }
+      }
+    });
+
+    const steps = ['#step-node-1', '#step-node-2', '#step-node-3', '#step-node-4'];
+    steps.forEach(nodeId => {
+      const stepNode = document.querySelector(nodeId);
+      if (stepNode) {
+        ScrollTrigger.create({
+          trigger: stepNode,
+          start: 'top 55%',
+          end: 'bottom 45%',
+          onEnter: () => stepNode.classList.add('active'),
+          onLeaveBack: () => stepNode.classList.remove('active')
+        });
+      }
+    });
+  }
+
+  // --- Terminal Auto-Typing Simulation (Section 4) ---
+  const codeSnippet = `// Initialize VCT Unified Gateway SDK
+import { VCTGateway } from 'vct-wrapped-sdk';
+
+const vct = new VCTGateway({
+  apiKey: process.env.VCT_SECRET_KEY,
+  redisUrl: 'redis://localhost:6379'
+});
+
+// Resilient LLM Request with automatic key rotation and provider failover
+const completion = await vct.llm.chat({
+  messages: [{ role: 'user', content: 'Process financial ledger ledger_01' }],
+  providers: ['openai', 'gemini'], // Auto-fallback
+  cache: true // Sub-5ms Redis cache enabled
+});
+
+console.log('Failsafe execution resolved via:', completion.meta.provider);`;
+
+  const terminalSection = document.getElementById('terminal-section');
+  const typedCodeTarget = document.getElementById('typed-code-target');
+  let hasTyped = false;
+
+  const runCodeTyper = () => {
+    if (hasTyped) return;
+    hasTyped = true;
+
+    let cursorIndex = 0;
+    typedCodeTarget.innerHTML = ''; 
+
+    const typeWriter = setInterval(() => {
+      if (cursorIndex < codeSnippet.length) {
+        typedCodeTarget.textContent += codeSnippet.charAt(cursorIndex);
+        cursorIndex++;
+        Prism.highlightElement(typedCodeTarget);
+      } else {
+        clearInterval(typeWriter);
+      }
+    }, 12); 
+  };
+
+  if (terminalSection && typedCodeTarget) {
+    ScrollTrigger.create({
+      trigger: terminalSection,
+      start: 'top 55%',
+      onEnter: runCodeTyper
+    });
+  }
+
+  // --- Copy Code to Clipboard Trigger ---
+  const copyBtn = document.getElementById('btn-copy-code');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(codeSnippet).then(() => {
+        const icon = copyBtn.querySelector('i');
+        if (icon) {
+          icon.setAttribute('data-lucide', 'check');
+          lucide.createIcons();
+          setTimeout(() => {
+            icon.setAttribute('data-lucide', 'copy');
+            lucide.createIcons();
+          }, 2000);
+        }
+      });
+    });
+  }
+
+  // --- Initialize SideRays WebGL background ---
+  const raysContainer = document.getElementById('hero-side-rays');
+  if (raysContainer) {
+    initSideRays(raysContainer, {
+      speed: 2.5,
+      rayColor1: '#EAB308',
+      rayColor2: '#96c8ff',
+      intensity: 2,
+      spread: 2,
+      origin: 'top-right',
+      tilt: 0,
+      saturation: 1.5,
+      blend: 0.75,
+      falloff: 1.6,
+      opacity: 1.0
+    });
+  }
+
+  // --- Interactive Bento Cards click behavior to update console query parameter ---
+  const bentoCards = document.querySelectorAll('.bento-card');
+  bentoCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const service = card.getAttribute('data-service');
+      if (service) {
+        window.location.href = `/dashboard.html?service=${service}`;
+      }
+    });
+  });
+
 })();
