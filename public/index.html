@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VCT Wrapped APIs | Midnight Precision</title>
-  <meta name="description" content="A hyper-premium, midnight-precision storytelling landing page for VCT Wrapped APIs. Styled in matte black with glowing edge glass and interactive hover physics.">
+  <title>VCT Wrapped APIs | Midnight Navy & Neon Sunset</title>
+  <meta name="description" content="A hyper-premium storytelling landing page for VCT Wrapped APIs. Styled in midnight navy with neon sunset glowing edge glass and interactive hover physics.">
   
   <!-- Typography: Inter for body, Fira Code / SF Mono style for technical data -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,6 +18,12 @@
 
   <!-- Subtle radial glow spotlight background -->
   <div class="spotlight-bg" id="spotlight-bg"></div>
+  
+  <!-- Premium Slate Tech Grid Overlay -->
+  <div class="grid-overlay"></div>
+  
+  <!-- Interactive Canvas Particle Starfield Background -->
+  <canvas id="particle-canvas"></canvas>
 
   <!-- Custom fluid cursor -->
   <div id="custom-cursor"></div>
@@ -33,9 +39,10 @@
       <!-- Spotlight container -->
       <div class="container hero-wrapper">
         <div class="hero-content-wrapper reveal-elem" data-speed="1.0">
-          <div class="hero-top-badge">
+          <div class="hero-top-badge clickable">
             <i data-lucide="sparkles" class="badge-icon"></i>
             <span>VCT LABS GATEWAY</span>
+            <span class="badge-pulse-glow"></span>
           </div>
           
           <h1 class="hero-title">VCT Wrapped APIs</h1>
@@ -110,7 +117,7 @@
       </div>
     </section>
 
-    <!-- SECTION 2: THE GRID (LIQUID BENTO) -->
+    <!-- SECTION 2: THE GRID (LIQUID BENTO WITH INTERACTIVE TECH VISUALS) -->
     <section id="bento-section" class="section-bento">
       <div class="container">
         <div class="section-header reveal-elem">
@@ -124,17 +131,26 @@
           <!-- LLM Card (Wide) -->
           <div class="precision-card bento-card bento-wide reveal-elem clickable" data-service="llm" data-speed="1.02">
             <div class="card-glow-layer"></div>
-            <div class="card-top">
-              <div class="card-icon"><i data-lucide="sparkles"></i></div>
-              <div class="active-badge"><span class="badge-dot"></span>Active</div>
-            </div>
-            <div class="card-body">
-              <h3>LLM Wrapper</h3>
-              <span class="card-route">POST /llm/v1/chat</span>
-              <p>Automatically rotates OpenAI keys; falls back to Gemini in real-time if rate limits or timeout thresholds trigger.</p>
-              <div class="card-tags">
-                <span class="tag">Dual-Provider</span>
-                <span class="tag">Failover Engine</span>
+            <div class="bento-split-layout">
+              <div class="card-body">
+                <div class="card-top">
+                  <div class="card-icon"><div class="sunset-icon-glow"></div><i data-lucide="sparkles"></i></div>
+                  <div class="active-badge"><span class="badge-dot"></span>Active</div>
+                </div>
+                <h3>LLM Wrapper</h3>
+                <span class="card-route">POST /llm/v1/chat</span>
+                <p>Automatically rotates OpenAI keys; falls back to Gemini in real-time if rate limits or timeout thresholds trigger.</p>
+                <div class="card-tags">
+                  <span class="tag">Dual-Provider</span>
+                  <span class="tag">Failover Engine</span>
+                </div>
+              </div>
+              
+              <!-- Premium AI Orb Visual -->
+              <div class="bento-visual llm-visual">
+                <div class="ai-orbit ring-1"></div>
+                <div class="ai-orbit ring-2"></div>
+                <div class="ai-core-orb"></div>
               </div>
             </div>
           </div>
@@ -143,7 +159,7 @@
           <div class="precision-card bento-card bento-square reveal-elem clickable" data-service="pay" data-speed="1.06">
             <div class="card-glow-layer"></div>
             <div class="card-top">
-              <div class="card-icon"><i data-lucide="credit-card"></i></div>
+              <div class="card-icon"><div class="sunset-icon-glow"></div><i data-lucide="credit-card"></i></div>
               <div class="active-badge"><span class="badge-dot"></span>Active</div>
             </div>
             <div class="card-body">
@@ -154,13 +170,20 @@
                 <span class="tag">RazorpayX</span>
               </div>
             </div>
+            <!-- Premium Split Bar Visual -->
+            <div class="bento-visual pay-visual">
+              <div class="split-bar bar-1"></div>
+              <div class="split-bar bar-2"></div>
+              <div class="split-bar bar-3"></div>
+              <div class="split-indicator"></div>
+            </div>
           </div>
 
           <!-- Firebase Card (Square) -->
           <div class="precision-card bento-card bento-square reveal-elem clickable" data-service="fb" data-speed="1.04">
             <div class="card-glow-layer"></div>
             <div class="card-top">
-              <div class="card-icon"><i data-lucide="shield-check"></i></div>
+              <div class="card-icon"><div class="sunset-icon-glow"></div><i data-lucide="shield-check"></i></div>
               <div class="active-badge"><span class="badge-dot"></span>Active</div>
             </div>
             <div class="card-body">
@@ -171,22 +194,40 @@
                 <span class="tag">Secure Cache</span>
               </div>
             </div>
+            <!-- Concentric Database Security Visual -->
+            <div class="bento-visual fb-visual">
+              <div class="db-disc disc-1"></div>
+              <div class="db-disc disc-2"></div>
+              <div class="db-disc disc-3"></div>
+              <div class="db-shield-node"><i data-lucide="lock"></i></div>
+            </div>
           </div>
 
           <!-- CDN Card (Wide) -->
           <div class="precision-card bento-card bento-wide reveal-elem clickable" data-service="cdn" data-speed="1.03">
             <div class="card-glow-layer"></div>
-            <div class="card-top">
-              <div class="card-icon"><i data-lucide="image"></i></div>
-              <div class="active-badge"><span class="badge-dot"></span>Active</div>
-            </div>
-            <div class="card-body">
-              <h3>CDN Transformer</h3>
-              <span class="card-route">POST /cdn/v1/url/sign</span>
-              <p>Responsive media uploads and signed Cloudinary URLs created with transient expiry validation.</p>
-              <div class="card-tags">
-                <span class="tag">Cloudinary</span>
-                <span class="tag">Signed Media</span>
+            <div class="bento-split-layout">
+              <div class="card-body">
+                <div class="card-top">
+                  <div class="card-icon"><div class="sunset-icon-glow"></div><i data-lucide="image"></i></div>
+                  <div class="active-badge"><span class="badge-dot"></span>Active</div>
+                </div>
+                <h3>CDN Transformer</h3>
+                <span class="card-route">POST /cdn/v1/url/sign</span>
+                <p>Responsive media uploads and signed Cloudinary URLs created with transient expiry validation.</p>
+                <div class="card-tags">
+                  <span class="tag">Cloudinary</span>
+                  <span class="tag">Signed Media</span>
+                </div>
+              </div>
+              
+              <!-- Responsive Image Comparison Visual -->
+              <div class="bento-visual cdn-visual">
+                <div class="cdn-frame image-before"></div>
+                <div class="cdn-frame image-after"></div>
+                <div class="cdn-slider-handle">
+                  <i data-lucide="arrow-left-right"></i>
+                </div>
               </div>
             </div>
           </div>
@@ -195,7 +236,7 @@
           <div class="precision-card bento-card bento-square reveal-elem clickable" data-service="mail" data-speed="1.07">
             <div class="card-glow-layer"></div>
             <div class="card-top">
-              <div class="card-icon"><i data-lucide="mail"></i></div>
+              <div class="card-icon"><div class="sunset-icon-glow"></div><i data-lucide="mail"></i></div>
               <div class="active-badge"><span class="badge-dot"></span>Active</div>
             </div>
             <div class="card-body">
@@ -206,22 +247,36 @@
                 <span class="tag">Resend</span>
               </div>
             </div>
+            <!-- Sliding Paper Plane Mail Visual -->
+            <div class="bento-visual mail-visual">
+              <div class="mail-trail"></div>
+              <div class="mail-paper-plane"><i data-lucide="send"></i></div>
+            </div>
           </div>
 
           <!-- Geo Card (Wide) -->
           <div class="precision-card bento-card bento-wide reveal-elem clickable" data-service="geo" data-speed="1.02">
             <div class="card-glow-layer"></div>
-            <div class="card-top">
-              <div class="card-icon"><i data-lucide="map-pin"></i></div>
-              <div class="active-badge"><span class="badge-dot"></span>Active</div>
-            </div>
-            <div class="card-body">
-              <h3>Geo Matrix</h3>
-              <span class="card-route">GET /geo/v1/geocode</span>
-              <p>Optimized MapMyIndia geolocation indices, reverse routing metrics, and distance maps.</p>
-              <div class="card-tags">
-                <span class="tag">MapMyIndia</span>
-                <span class="tag">Geocoding</span>
+            <div class="bento-split-layout">
+              <div class="card-body">
+                <div class="card-top">
+                  <div class="card-icon"><div class="sunset-icon-glow"></div><i data-lucide="map-pin"></i></div>
+                  <div class="active-badge"><span class="badge-dot"></span>Active</div>
+                </div>
+                <h3>Geo Matrix</h3>
+                <span class="card-route">GET /geo/v1/geocode</span>
+                <p>Optimized MapMyIndia geolocation indices, reverse routing metrics, and distance maps.</p>
+                <div class="card-tags">
+                  <span class="tag">MapMyIndia</span>
+                  <span class="tag">Geocoding</span>
+                </div>
+              </div>
+              
+              <!-- Geolocator Radar Ping Visual -->
+              <div class="bento-visual geo-visual">
+                <div class="radar-ping ping-1"></div>
+                <div class="radar-ping ping-2"></div>
+                <div class="geo-pin-node"><i data-lucide="navigation"></i></div>
               </div>
             </div>
           </div>
@@ -321,9 +376,9 @@
               <path id="flow-line-active" d="M 50,0 L 50,800" stroke="url(#flow-gradient)" stroke-width="3.5" fill="none" stroke-dasharray="800" stroke-dashoffset="800" />
               <defs>
                 <linearGradient id="flow-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#00f2fe" />
-                  <stop offset="50%" stop-color="#9f7aea" />
-                  <stop offset="100%" stop-color="#4299e1" />
+                  <stop offset="0%" stop-color="#FF8C00" />
+                  <stop offset="50%" stop-color="#FF007F" />
+                  <stop offset="100%" stop-color="#8A2BE2" />
                 </linearGradient>
               </defs>
             </svg>
@@ -460,7 +515,7 @@
           <div class="precision-card status-card">
             <div class="card-glow-layer"></div>
             <div class="status-card-top">
-              <h4>Geo suggestions</h4>
+              <h4>Geo Suggestions</h4>
               <span class="status-percentage">99.95%</span>
             </div>
             <div class="uptime-bars-container" data-service="geo"></div>

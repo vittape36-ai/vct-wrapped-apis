@@ -5,7 +5,7 @@
       name: 'LLM Wrapper',
       method: 'POST',
       endpoint: '/llm/v1/chat',
-      response: `[VCT AI Gateway resolved via Gemini fallback]
+      response: `[VCT Midnight Navy Gateway resolved via Gemini fallback]
 {
   "ok": true,
   "data": {
@@ -20,7 +20,7 @@
       name: 'Payments Wrapper',
       method: 'POST',
       endpoint: '/pay/v1/order',
-      response: `[VCT Payment Gateway resolved]
+      response: `[VCT Midnight Navy Payment Gateway resolved]
 {
   "ok": true,
   "data": {
@@ -39,7 +39,7 @@
       name: 'Firebase Wrapper',
       method: 'POST',
       endpoint: '/fb/v1/auth/verify',
-      response: `[VCT Firebase Guard resolved]
+      response: `[VCT Midnight Navy Firebase Guard resolved]
 {
   "ok": true,
   "data": {
@@ -54,7 +54,7 @@
       name: 'CDN Wrapper',
       method: 'POST',
       endpoint: '/cdn/v1/url/sign',
-      response: `[VCT CDN Transformer resolved]
+      response: `[VCT Midnight Navy CDN Transformer resolved]
 {
   "ok": true,
   "data": {
@@ -67,7 +67,7 @@
       name: 'Mail Wrapper',
       method: 'POST',
       endpoint: '/mail/v1/send',
-      response: `[VCT Resend SMTP Dispatcher resolved]
+      response: `[VCT Midnight Navy SMTP Dispatcher resolved]
 {
   "ok": true,
   "data": {
@@ -81,7 +81,7 @@
       name: 'Geo Wrapper',
       method: 'GET',
       endpoint: '/geo/v1/geocode',
-      response: `[VCT Geo Suggest resolved via MapMyIndia]
+      response: `[VCT Midnight Navy Geo Suggest resolved via MapMyIndia]
 {
   "ok": true,
   "data": {
@@ -156,44 +156,73 @@ Try typing "failsafe", "rotate", or "caching" to see specific details.`
     });
   });
 
-  // --- Custom Fluid Cursor ---
+  // --- Custom Fluid Cursor with Velocity Stretching ---
   const cursor = document.getElementById('custom-cursor');
   const cursorDot = document.getElementById('custom-cursor-dot');
   
   if (cursor && cursorDot) {
+    cursor.style.left = '0';
+    cursor.style.top = '0';
+    cursorDot.style.left = '0';
+    cursorDot.style.top = '0';
+
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
-    let currentX = mouseX;
-    let currentY = mouseY;
+    let ringX = mouseX;
+    let ringY = mouseY;
+    let dotX = mouseX;
+    let dotY = mouseY;
 
     window.addEventListener('mousemove', e => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      
-      // Update dot position immediately
-      cursorDot.style.left = `${mouseX}px`;
-      cursorDot.style.top = `${mouseY}px`;
     });
 
+    let angle = 0;
+
     const tick = () => {
-      currentX += (mouseX - currentX) * 0.12;
-      currentY += (mouseY - currentY) * 0.12;
-      cursor.style.left = `${currentX}px`;
-      cursor.style.top = `${currentY}px`;
+      // Snappy dot tracking
+      dotX += (mouseX - dotX) * 0.3;
+      dotY += (mouseY - dotY) * 0.3;
+      
+      // Smooth lagging ring tracking
+      const prevRingX = ringX;
+      const prevRingY = ringY;
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+
+      const dx = ringX - prevRingX;
+      const dy = ringY - prevRingY;
+      const speed = Math.sqrt(dx * dx + dy * dy);
+      
+      if (speed > 0.1) {
+        angle = Math.atan2(dy, dx) * 180 / Math.PI;
+      }
+      
+      // Stretching deformation scale
+      const stretch = Math.min(speed * 0.08, 0.6);
+      const scaleX = 1 + stretch;
+      const scaleY = 1 - stretch * 0.3;
+      
+      cursorDot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
+      cursor.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) rotate(${angle}deg) scale(${scaleX}, ${scaleY})`;
+
       requestAnimationFrame(tick);
     };
     tick();
 
-    document.querySelectorAll('.clickable, a, button, input, select').forEach(el => {
+    document.querySelectorAll('.clickable, a, button, input, select, .precision-card').forEach(el => {
       el.addEventListener('mouseenter', () => {
-        cursor.style.width = '48px';
-        cursor.style.height = '48px';
-        cursor.style.borderColor = 'rgba(0, 242, 254, 0.7)';
+        cursor.classList.add('hover');
+        cursor.style.borderColor = 'var(--neon-magenta)';
+        cursor.style.backgroundColor = 'rgba(255, 0, 127, 0.05)';
+        cursor.style.boxShadow = '0 0 15px rgba(255, 0, 127, 0.2)';
       });
       el.addEventListener('mouseleave', () => {
-        cursor.style.width = '32px';
-        cursor.style.height = '32px';
-        cursor.style.borderColor = 'rgba(0, 242, 254, 0.35)';
+        cursor.classList.remove('hover');
+        cursor.style.borderColor = 'rgba(255, 255, 255, 0.45)';
+        cursor.style.backgroundColor = 'transparent';
+        cursor.style.boxShadow = 'none';
       });
     });
   }
@@ -441,7 +470,7 @@ void main() {
     });
   }
 
-  // --- Bento Cards Cursor Spotlight Tracking ---
+  // --- Bento Cards Cursor Spotlight & 3D Magnetic Tilt Tracking ---
   const cards = document.querySelectorAll('.precision-card');
   cards.forEach(card => {
     card.addEventListener('mousemove', e => {
@@ -450,10 +479,35 @@ void main() {
       const y = e.clientY - rect.top;
       card.style.setProperty('--mouse-x', `${x}px`);
       card.style.setProperty('--mouse-y', `${y}px`);
+
+      // 3D Tilt calculation
+      const width = rect.width;
+      const height = rect.height;
+      const normX = (x / width) - 0.5; // -0.5 to 0.5
+      const normY = (y / height) - 0.5; // -0.5 to 0.5
+      
+      const maxTilt = 6; // Max 6 degrees rotation
+      const rotateX = -normY * maxTilt;
+      const rotateY = normX * maxTilt;
+      
+      gsap.to(card, {
+        transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px) scale(1.01)`,
+        duration: 0.3,
+        ease: 'power2.out',
+        overwrite: 'auto'
+      });
     });
+
     card.addEventListener('mouseleave', () => {
       card.style.setProperty('--mouse-x', `-999px`);
       card.style.setProperty('--mouse-y', `-999px`);
+
+      gsap.to(card, {
+        transform: `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)`,
+        duration: 0.5,
+        ease: 'power2.out',
+        overwrite: 'auto'
+      });
     });
   });
 
@@ -805,8 +859,8 @@ console.log('Failsafe execution resolved via:', completion.meta.provider);`;
   if (raysContainer) {
     initSideRays(raysContainer, {
       speed: 2.5,
-      rayColor1: '#EAB308',
-      rayColor2: '#96c8ff',
+      rayColor1: '#FF8C00', // Sunset Orange
+      rayColor2: '#FF007F', // Sunset Magenta
       intensity: 2,
       spread: 2,
       origin: 'top-right',
@@ -821,12 +875,128 @@ console.log('Failsafe execution resolved via:', completion.meta.provider);`;
   // --- Interactive Bento Cards click behavior to update console query parameter ---
   const bentoCards = document.querySelectorAll('.bento-card');
   bentoCards.forEach(card => {
-    card.addEventListener('click', () => {
+    card.addEventListener('click', (e) => {
+      // Avoid redirecting if clicking on an interactive inner element (like buttons or comparison slider)
+      if (e.target.closest('button') || e.target.closest('a') || e.target.closest('select') || e.target.closest('input')) {
+        return;
+      }
       const service = card.getAttribute('data-service');
       if (service) {
         window.location.href = `/dashboard.html?service=${service}`;
       }
     });
+  });
+
+  // --- Cosmic Particle Starfield Background Canvas ---
+  const canvas = document.getElementById('particle-canvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    
+    // Create initial particle pool with sunset colors
+    const count = 70;
+    const colors = [
+      'rgba(255, 140, 0, 0.75)',  // Neon Orange
+      'rgba(255, 0, 127, 0.75)',  // Neon Magenta
+      'rgba(138, 43, 226, 0.75)'  // Neon Purple
+    ];
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.2 + 0.4,
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15,
+        alpha: Math.random() * 0.5 + 0.15,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      });
+    }
+    
+    // Track mouse coordinates globally for a subtle hover push
+    let globalMouseX = -999;
+    let globalMouseY = -999;
+    window.addEventListener('mousemove', e => {
+      globalMouseX = e.clientX;
+      globalMouseY = e.clientY;
+    });
+    
+    const animateParticles = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      particles.forEach(p => {
+        // Move particle
+        p.x += p.vx;
+        p.y += p.vy;
+        
+        // Wrap around screen boundaries
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+        
+        // Mouse push effect
+        if (globalMouseX > 0 && globalMouseY > 0) {
+          const dx = p.x - globalMouseX;
+          const dy = p.y - globalMouseY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 180) {
+            const force = (180 - dist) / 180 * 0.15;
+            p.x += (dx / dist) * force;
+            p.y += (dy / dist) * force;
+          }
+        }
+        
+        // Draw particle
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+      
+      requestAnimationFrame(animateParticles);
+    };
+    
+    animateParticles();
+  }
+
+  // --- Ripple Button Effect (Magic UI Port) ---
+  const createButtonRipple = (event) => {
+    const button = event.currentTarget;
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+
+    const ripple = document.createElement('span');
+    ripple.classList.add('ripple-span');
+    ripple.style.width = `${size}px`;
+    ripple.style.height = `${size}px`;
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+
+    const customColor = button.getAttribute('data-ripple-color') || 'rgba(255, 255, 255, 0.4)';
+    ripple.style.backgroundColor = customColor;
+
+    button.appendChild(ripple);
+
+    setTimeout(() => {
+      ripple.remove();
+    }, 600);
+  };
+
+  document.querySelectorAll('.btn-precision, .btn-ask-submit, .btn-copy-code, button').forEach(button => {
+    button.classList.add('ripple-btn');
+    button.addEventListener('mousedown', createButtonRipple);
   });
 
 })();
