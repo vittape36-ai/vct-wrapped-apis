@@ -810,25 +810,56 @@ console.log('Failsafe execution resolved via:', completion.meta.provider);`;
   const typedCodeTarget = document.getElementById('typed-code-target');
   let hasTyped = false;
 
+  
   const runCodeTyper = () => {
     if (hasTyped) return;
     hasTyped = true;
 
-    let cursorIndex = 0;
     typedCodeTarget.innerHTML = ''; 
+    const lines = codeSnippet.split('\n');
+    let delayQueue = 0;
 
-    const typeWriter = setInterval(() => {
-      if (cursorIndex < codeSnippet.length) {
-        typedCodeTarget.textContent += codeSnippet.charAt(cursorIndex);
-        cursorIndex++;
-        Prism.highlightElement(typedCodeTarget);
+    lines.forEach((lineText, index) => {
+      const lineSpan = document.createElement('span');
+      typedCodeTarget.appendChild(lineSpan);
+
+      // Magic UI Logic: definitions fade in (AnimatedSpan), execution types out (TypingAnimation)
+      if (lineText.trim() === '' || lineText.startsWith('import') || lineText.startsWith('const') || lineText.startsWith('  ') || lineText.startsWith('}')) {
+        // AnimatedSpan Replica
+        lineSpan.className = 'terminal-line';
+        lineSpan.innerHTML = Prism.highlight(lineText, Prism.languages.javascript, 'javascript');
+        
+        gsap.to(lineSpan, {
+          opacity: 1,
+          y: 0,
+          duration: 0.3,
+          delay: delayQueue,
+          ease: "power2.out"
+        });
+        delayQueue += 0.15; // Wait 150ms before next line
       } else {
-        clearInterval(typeWriter);
+        // TypingAnimation Replica
+        lineSpan.className = 'terminal-line-typed';
+        let typedText = '';
+        let i = 0;
+        
+        gsap.delayedCall(delayQueue, () => {
+          const typeInterval = setInterval(() => {
+            if (i < lineText.length) {
+              typedText += lineText.charAt(i);
+              lineSpan.innerHTML = Prism.highlight(typedText, Prism.languages.javascript, 'javascript');
+              i++;
+            } else {
+              clearInterval(typeInterval);
+            }
+          }, 30); // 30ms per char (Magic UI default is 60, but 30 looks smoother)
+        });
+        
+        delayQueue += (lineText.length * 0.03) + 0.2; 
       }
-    }, 12); 
+    });
   };
-
-  if (terminalSection && typedCodeTarget) {
+if (terminalSection && typedCodeTarget) {
     ScrollTrigger.create({
       trigger: terminalSection,
       start: 'top 55%',
