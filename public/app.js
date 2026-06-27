@@ -92,69 +92,36 @@
     }
   };
 
-  // Pre-baked responses for the "Ask Anything" AI box
-  const askAnythingResponses = {
-    'failsafe': `**Upstream Failsafe System**:
-VCT Wrapped APIs continuously monitor error thresholds (like 500s, 429s, and timeouts). 
-If an upstream service experiences failure:
-1. The request immediately undergoes exponential backoff retry.
-2. If failures continue, the wrapper swaps active keys or fails over to standby models (e.g. falling back from OpenAI to Gemini).`,
-    
-    'rotate': `**Automatic Key Rotation**:
-Credentials reside in a round-robin rotation pool. Latencies and provider limits are checked inline.
-When a key throws a rate limit error, it is placed on a cooling interval (cooldown timer), and fresh keys are swapped into the pipeline immediately.`,
-    
-    'caching': `**Sub-5ms Caching Backplane**:
-We use high-performance Redis pipelines inline with endpoints.
-- **Cache Hit**: Data is returned in <5ms.
-- **Cache Miss**: Downstream servers process requests, caching payloads dynamically for configured TTLs.
-Rate checking executes asynchronously in the background.`,
-    
-    'redis': `**Sub-5ms Caching Backplane**:
-We use high-performance Redis pipelines inline with endpoints.
-- **Cache Hit**: Data is returned in <5ms.
-- **Cache Miss**: Downstream servers process requests, caching payloads dynamically for configured TTLs.
-Rate checking executes asynchronously in the background.`,
-
-    'default': `**VCT Unified Gateway SDK**:
-Available Wrappers:
-- **LLM**: Rotates pools of OpenAI and Gemini credentials.
-- **Payments**: Splits vendor payments.
-- **Firebase**: Gateway verified auth.
-- **CDN**: Signed Cloudinary media links.
-- **Mail**: Resend template processor.
-- **Geo**: MapMyIndia suggested suggestions.
-
-Try typing "failsafe", "rotate", or "caching" to see specific details.`
-  };
 
   // --- Initialize Lucide Icons ---
   lucide.createIcons();
 
   // --- Smooth Scroll using Lenis ---
-  const lenis = new Lenis({
-    duration: 1.2,
-    easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    smoothWheel: true
-  });
-
-  function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
-  requestAnimationFrame(raf);
-
-  // Link scroll navigation clicks to Lenis
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-      e.preventDefault();
-      const targetId = this.getAttribute('href');
-      const target = document.querySelector(targetId);
-      if (target) {
-        lenis.scrollTo(target);
-      }
+  if (typeof Lenis !== 'undefined') {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true
     });
-  });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Link scroll navigation clicks to Lenis
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const target = document.querySelector(targetId);
+        if (target) {
+          lenis.scrollTo(target);
+        }
+      });
+    });
+  }
 
   // --- Custom Fluid Cursor with Velocity Stretching ---
   const cursor = document.getElementById('custom-cursor');
@@ -511,65 +478,6 @@ void main() {
     });
   });
 
-  // --- Ask Anything AI Box Input Interactions ---
-  const askInput = document.getElementById('ask-anything-input');
-  const askBox = document.getElementById('ask-anything-box');
-  const askSubmitBtn = document.getElementById('ask-submit-btn');
-  const responseBox = document.getElementById('hero-response-box');
-  const responseText = document.getElementById('hero-response-text');
-  const closeResponseBtn = document.getElementById('close-response-btn');
-
-  if (askInput && askBox) {
-    askInput.addEventListener('focus', () => askBox.classList.add('focused'));
-    askInput.addEventListener('blur', () => askBox.classList.remove('focused'));
-
-    window.addEventListener('keydown', e => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        askInput.focus();
-      }
-    });
-
-    const triggerSubmit = () => {
-      const query = askInput.value.trim().toLowerCase();
-      if (!query) return;
-
-      responseBox.style.display = 'block';
-      responseText.textContent = '';
-      
-      let responseStr = askAnythingResponses['default'];
-      for (const key of Object.keys(askAnythingResponses)) {
-        if (query.includes(key)) {
-          responseStr = askAnythingResponses[key];
-          break;
-        }
-      }
-
-      let charIdx = 0;
-      const typeInterval = setInterval(() => {
-        if (charIdx < responseStr.length) {
-          responseText.textContent += responseStr.charAt(charIdx);
-          charIdx++;
-        } else {
-          clearInterval(typeInterval);
-        }
-      }, 10);
-    };
-
-    askSubmitBtn.addEventListener('click', triggerSubmit);
-    askInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        triggerSubmit();
-      }
-    });
-
-    if (closeResponseBtn) {
-      closeResponseBtn.addEventListener('click', () => {
-        responseBox.style.display = 'none';
-        responseText.textContent = '';
-      });
-    }
-  }
 
   // --- Live Metrics Ticker Increments & Oscillations ---
   const reqMetric = document.getElementById('metric-requests');
@@ -1029,5 +937,473 @@ if (terminalSection && typedCodeTarget) {
     button.classList.add('ripple-btn');
     button.addEventListener('mousedown', createButtonRipple);
   });
+
+  // --- Magic UI Dia Text Reveal (GSAP replica) ---
+  const diaReveal = document.querySelector('.dia-text-reveal');
+  if (diaReveal) {
+    const colors = ["#c679c4", "#fa3d1d", "#ffb005", "#e1e1fe", "#0358f7"];
+    const textColor = 'rgba(255, 255, 255, 0.96)';
+    const BAND_HALF = 17;
+    const SWEEP_START = -BAND_HALF;
+    const SWEEP_END = 100 + BAND_HALF;
+
+    const buildGradient = (pos, colors, textColor) => {
+      const bandStart = pos - BAND_HALF;
+      const bandEnd = pos + BAND_HALF;
+
+      if (bandStart >= 100) {
+        return `linear-gradient(90deg, ${textColor}, ${textColor})`;
+      }
+
+      const n = colors.length;
+      const parts = [];
+
+      if (bandStart > 0) {
+        parts.push(`${textColor} 0%`, `${textColor} ${bandStart.toFixed(2)}%`);
+      }
+
+      colors.forEach((c, i) => {
+        const pct = n === 1 ? pos : bandStart + (i / (n - 1)) * BAND_HALF * 2;
+        parts.push(`${c} ${pct.toFixed(2)}%`);
+      });
+
+      if (bandEnd < 100) {
+        parts.push(`transparent ${bandEnd.toFixed(2)}%`, `transparent 100%`);
+      }
+
+      return `linear-gradient(90deg, ${parts.join(', ')})`;
+    };
+
+    const sweepVal = { pos: SWEEP_START };
+    
+    // Set initial state for reveal slide-up
+    gsap.set(diaReveal, { 
+      opacity: 0, 
+      y: 45 
+    });
+
+    // Animate the text sliding up and fading in
+    gsap.to(diaReveal, {
+      opacity: 1,
+      y: 0,
+      duration: 1.8,
+      delay: 0.5,
+      ease: 'power3.out'
+    });
+
+    // Animate the colorful sweep gradient reveal
+    gsap.to(sweepVal, {
+      pos: SWEEP_END,
+      duration: 3.0,
+      delay: 0.5,
+      ease: 'power3.inOut',
+      onUpdate: () => {
+        const grad = buildGradient(sweepVal.pos, colors, textColor);
+        diaReveal.style.setProperty('background-image', grad, 'important');
+      }
+    });
+  }
+
+  // --- Magic UI Text Animate (GSAP replica for subtitle) ---
+  const subtitle = document.querySelector('.hero-subtitle');
+  if (subtitle) {
+    const rawText = subtitle.textContent.trim();
+    const segments = rawText.split(/(\s+)/);
+    subtitle.innerHTML = '';
+
+    segments.forEach(segment => {
+      if (segment.trim() === '') {
+        subtitle.appendChild(document.createTextNode(segment));
+      } else {
+        const span = document.createElement('span');
+        span.className = 'subtitle-word';
+        span.style.display = 'inline-block';
+        span.style.opacity = '0';
+        span.style.transform = 'translateY(12px)';
+        span.style.filter = 'blur(6px)';
+        span.textContent = segment;
+        subtitle.appendChild(span);
+      }
+    });
+
+    const words = subtitle.querySelectorAll('.subtitle-word');
+    gsap.to(words, {
+      opacity: 1,
+      y: 0,
+      filter: 'blur(0px)',
+      duration: 0.5,
+      stagger: 0.015, // smooth cascading reveal
+      delay: 1.2, // starts after title animation is underway
+      ease: 'power2.out'
+    });
+  }
+
+  // =========================================================
+  // SPATIAL COMMAND CENTER INTERACTION LOGIC (dashboard.html)
+  // =========================================================
+
+  // --- Sidebar Tab Selectors Navigation ---
+  const sidebarItems = document.querySelectorAll('.floating-sidebar-capsule .nav-icon-link[data-tab]');
+  const tabPanels = document.querySelectorAll('.dashboard-tab-panel');
+  
+  if (sidebarItems.length && tabPanels.length) {
+    sidebarItems.forEach(item => {
+      item.addEventListener('click', () => {
+        sidebarItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        
+        const targetTab = item.getAttribute('data-tab');
+        tabPanels.forEach(panel => {
+          panel.classList.remove('active');
+          if (panel.id === `panel-${targetTab}`) {
+            panel.classList.add('active');
+            
+            // Re-render Lucide icons inside newly active panel if necessary
+            lucide.createIcons();
+          }
+        });
+      });
+    });
+  }
+
+  // --- Tactile Clay Buttons Spring Physics ---
+  const clayBtns = document.querySelectorAll('.clay-action-btn');
+  clayBtns.forEach(btn => {
+    btn.addEventListener('mousedown', () => {
+      gsap.to(btn, {
+        scale: 0.95,
+        boxShadow: 'inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.05), 2px 2px 4px rgba(0,0,0,0.2) !important',
+        duration: 0.1,
+        ease: 'power2.out'
+      });
+    });
+    btn.addEventListener('mouseup', () => {
+      gsap.to(btn, {
+        scale: 1,
+        boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.08), inset -3px -3px 6px rgba(0, 0, 0, 0.4), 6px 6px 12px rgba(0, 0, 0, 0.3) !important',
+        duration: 0.6,
+        ease: 'elastic.out(1, 0.5)'
+      });
+    });
+    btn.addEventListener('mouseleave', () => {
+      gsap.to(btn, {
+        scale: 1,
+        boxShadow: 'inset 2px 2px 4px rgba(255, 255, 255, 0.08), inset -3px -3px 6px rgba(0, 0, 0, 0.4), 6px 6px 12px rgba(0, 0, 0, 0.3) !important',
+        duration: 0.6,
+        ease: 'elastic.out(1, 0.5)'
+      });
+    });
+  });
+
+  // --- Magnetic Hover over Glass Widgets ---
+  const glassWidgets = document.querySelectorAll('.glass-widget');
+  glassWidgets.forEach(widget => {
+    widget.addEventListener('mousemove', e => {
+      const rect = widget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const w = rect.width;
+      const h = rect.height;
+      const normX = (x / w) - 0.5; // -0.5 to 0.5
+      const normY = (y / h) - 0.5; // -0.5 to 0.5
+      
+      gsap.to(widget, {
+        rotateX: -normY * 4,
+        rotateY: normX * 4,
+        transformPerspective: 1000,
+        borderColor: 'rgba(255, 255, 255, 0.12)', // Brighten internal border glow
+        duration: 0.3,
+        ease: 'power3.out',
+        overwrite: 'auto'
+      });
+    });
+    
+    widget.addEventListener('mouseleave', () => {
+      gsap.to(widget, {
+        rotateX: 0,
+        rotateY: 0,
+        borderColor: 'rgba(255, 255, 255, 0.05)',
+        duration: 0.6,
+        ease: 'back.out(1.4)',
+        overwrite: 'auto'
+      });
+    });
+  });
+
+  // --- Chart.js Real-time Telemetry Visualization ---
+  const telemetryCtx = document.getElementById('telemetry-chart')?.getContext('2d');
+  if (telemetryCtx) {
+    const telemetryChart = new Chart(telemetryCtx, {
+      type: 'line',
+      data: {
+        labels: Array(15).fill(''),
+        datasets: [
+          {
+            label: 'GPU Load (%)',
+            data: Array(15).fill(0).map(() => Math.floor(Math.random() * 25) + 55),
+            borderColor: '#FF8C00',
+            borderWidth: 2,
+            tension: 0.4,
+            fill: false,
+            pointRadius: 0
+          },
+          {
+            label: 'CPU Load (%)',
+            data: Array(15).fill(0).map(() => Math.floor(Math.random() * 15) + 35),
+            borderColor: '#8A2BE2',
+            borderWidth: 2,
+            tension: 0.4,
+            fill: false,
+            pointRadius: 0
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { display: false },
+          y: { 
+            min: 0, 
+            max: 100, 
+            grid: { color: 'rgba(255,255,255,0.03)' }, 
+            ticks: { color: 'rgba(255,255,255,0.2)', font: { size: 9 } } 
+          }
+        }
+      }
+    });
+
+    // Real-time update interval for progress sliders & Chart
+    setInterval(() => {
+      const gpuLoad = Math.floor(Math.random() * 25) + 55;
+      const cpuLoad = Math.floor(Math.random() * 15) + 35;
+      
+      const gpuLoadEl = document.getElementById('gpu-load-val');
+      const cpuLoadEl = document.getElementById('cpu-load-val');
+      if (gpuLoadEl) gpuLoadEl.textContent = `${gpuLoad}%`;
+      if (cpuLoadEl) cpuLoadEl.textContent = `${cpuLoad}%`;
+
+      const gpuFill = document.querySelector('.gpu-fill');
+      const cpuFill = document.querySelector('.cpu-fill');
+      if (gpuFill) gpuFill.style.width = `${gpuLoad}%`;
+      if (cpuFill) cpuFill.style.width = `${cpuLoad}%`;
+
+      telemetryChart.data.datasets[0].data.shift();
+      telemetryChart.data.datasets[0].data.push(gpuLoad);
+      telemetryChart.data.datasets[1].data.shift();
+      telemetryChart.data.datasets[1].data.push(cpuLoad);
+      telemetryChart.update('none');
+    }, 2000);
+  }
+
+  // --- Dashboard Playground API Sandbox Handler ---
+  const sandboxSelect = document.getElementById('select-playground-service');
+  const sandboxEndpoint = document.getElementById('sandbox-endpoint');
+  const sandboxApiKey = document.getElementById('sandbox-api-key');
+  const sandboxPayload = document.getElementById('sandbox-request-payload');
+  const sandboxExecuteBtn = document.getElementById('btn-execute-sandbox');
+  const sandboxStatus = document.getElementById('val-sandbox-status');
+  const sandboxTerminal = document.getElementById('sandbox-terminal-screen');
+  const toggleSandboxKeyBtn = document.getElementById('btn-toggle-sandbox-key');
+
+  if (sandboxSelect && sandboxExecuteBtn) {
+    // Template payloads for each service
+    const payloadTemplates = {
+      llm: JSON.stringify({ messages: [{ role: 'user', content: 'Hello!' }] }, null, 2),
+      pay: JSON.stringify({ amount: 5000, currency: 'INR', splits: [{ vendor_id: 'vnd_01', amount: 2500 }] }, null, 2),
+      fb: JSON.stringify({ idToken: 'test-token-vct' }, null, 2),
+      cdn: JSON.stringify({ publicId: 'logo_vct' }, null, 2),
+      mail: JSON.stringify({ to: 'user@example.com', subject: 'Dashboard Test', text: 'Resilient mail dispatch test.' }, null, 2),
+      geo: '' // GET request, no body
+    };
+
+    // Update endpoint and template payload on service selection change
+    const updateServiceTemplate = () => {
+      const val = sandboxSelect.value;
+      const endpoints = {
+        llm: '/llm/v1/chat',
+        pay: '/pay/v1/order',
+        fb: '/fb/v1/auth/verify',
+        cdn: '/cdn/v1/url/sign',
+        mail: '/mail/v1/send',
+        geo: '/geo/v1/geocode?address=Delhi'
+      };
+      if (sandboxEndpoint) {
+        sandboxEndpoint.value = endpoints[val];
+      }
+      if (sandboxPayload) {
+        sandboxPayload.value = payloadTemplates[val];
+        // Hide payload for GET request (geo)
+        const container = sandboxPayload.closest('.form-group');
+        if (container) {
+          container.style.display = val === 'geo' ? 'none' : 'block';
+        }
+      }
+      const methodBadge = document.getElementById('console-method-badge');
+      if (methodBadge) {
+        methodBadge.textContent = val === 'geo' ? 'GET' : 'POST';
+      }
+    };
+
+    sandboxSelect.addEventListener('change', updateServiceTemplate);
+    updateServiceTemplate(); // Initial call
+
+    // Key visibility toggle
+    if (toggleSandboxKeyBtn && sandboxApiKey) {
+      toggleSandboxKeyBtn.addEventListener('click', () => {
+        const isPassword = sandboxApiKey.type === 'password';
+        sandboxApiKey.type = isPassword ? 'text' : 'password';
+        const icon = toggleSandboxKeyBtn.querySelector('i');
+        if (icon) {
+          icon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
+          lucide.createIcons();
+        }
+      });
+    }
+
+    // Execute sandbox request
+    sandboxExecuteBtn.addEventListener('click', async () => {
+      const service = sandboxSelect.value;
+      const endpoint = sandboxEndpoint.value;
+      const apiKey = sandboxApiKey.value;
+      const bodyText = sandboxPayload.value;
+
+      if (sandboxStatus) {
+        sandboxStatus.textContent = 'pending...';
+        sandboxStatus.className = 'status-pill status-pending';
+      }
+      if (sandboxTerminal) {
+        sandboxTerminal.textContent = '// Dispatching resilient request to gateway...';
+      }
+
+      try {
+        const options = {
+          method: service === 'geo' ? 'GET' : 'POST',
+          headers: {
+            'x-api-key': apiKey,
+            'Content-Type': 'application/json'
+          }
+        };
+        if (service !== 'geo' && bodyText) {
+          options.body = bodyText;
+        }
+
+        const res = await fetch(endpoint, options);
+        const data = await res.json();
+
+        if (sandboxStatus) {
+          if (res.ok) {
+            sandboxStatus.textContent = 'success';
+            sandboxStatus.className = 'status-pill status-online';
+          } else {
+            sandboxStatus.textContent = 'error';
+            sandboxStatus.className = 'status-pill status-offline';
+          }
+        }
+        if (sandboxTerminal) {
+          sandboxTerminal.textContent = JSON.stringify(data, null, 2);
+        }
+      } catch (err) {
+        if (sandboxStatus) {
+          sandboxStatus.textContent = 'failed';
+          sandboxStatus.className = 'status-pill status-offline';
+        }
+        if (sandboxTerminal) {
+          sandboxTerminal.textContent = `// Network or Connection Error:\n${err.message}`;
+        }
+      }
+    });
+  }
+
+  // --- Dashboard Keys Pool Generator ---
+  const keysPoolContainer = document.getElementById('dashboard-keys-pool');
+  if (keysPoolContainer) {
+    const mockKeys = [
+      { provider: 'OpenAI', type: 'Primary', status: 'Active', latency: '142ms', cooldown: '0s' },
+      { provider: 'OpenAI', type: 'Standby 1', status: 'Cooldown', latency: 'Timeout', cooldown: '42s' },
+      { provider: 'Gemini', type: 'Backup Primary', status: 'Active', latency: '185ms', cooldown: '0s' },
+      { provider: 'RazorpayX', type: 'Primary', status: 'Active', latency: '92ms', cooldown: '0s' }
+    ];
+
+    keysPoolContainer.innerHTML = mockKeys.map(key => `
+      <div class="key-card clay-widget">
+        <div class="key-card-header">
+          <span class="key-provider">${key.provider} (${key.type})</span>
+          <span class="status-pill ${key.status === 'Active' ? 'status-online' : 'status-offline'}">
+            <span class="status-dot"></span>${key.status}
+          </span>
+        </div>
+        <div class="key-card-stats">
+          <div class="key-stat">
+            <span class="label">Latency</span>
+            <span class="val font-mono">${key.latency}</span>
+          </div>
+          <div class="key-stat">
+            <span class="label">Cooldown</span>
+            <span class="val font-mono">${key.cooldown}</span>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // --- Dashboard Live Telemetry Logs Streamer ---
+  const logsScreen = document.getElementById('dashboard-logs-screen');
+  const pauseLogsBtn = document.getElementById('btn-dashboard-pause-logs');
+  const clearLogsBtn = document.getElementById('btn-dashboard-clear-logs');
+
+  if (logsScreen) {
+    let logsPaused = false;
+    const logTemplates = [
+      'INFO  [Gateway] Ingress request: POST /llm/v1/chat (IP: 192.168.1.42)',
+      'WARN  [Resiliency] Upstream timeout on OpenAI key pool, initiating automatic failover...',
+      'SUCCESS [Resiliency] Failover to Gemini API key pool succeeded (latency: 185ms)',
+      'INFO  [Cache] Redis Hit for /fb/v1/auth/verify (served in 2.1ms)',
+      'INFO  [Gateway] Payout order order_PRj93x84LmKq verified successfully via razorpay-ledger',
+      'SUCCESS [CDN] Signed Cloudinary URL assets/logo_vct successfully generated (valid 1h)',
+      'INFO  [Gateway] Ingress request: GET /geo/v1/geocode (IP: 104.22.4.92)'
+    ];
+
+    const appendLog = () => {
+      if (logsPaused) return;
+      const template = logTemplates[Math.floor(Math.random() * logTemplates.length)];
+      const timestamp = new Date().toISOString().split('T')[1].substring(0, 8);
+      const logLine = document.createElement('div');
+      logLine.className = 'log-line';
+      
+      let levelClass = 'log-info';
+      if (template.includes('WARN')) levelClass = 'log-warn';
+      if (template.includes('SUCCESS')) levelClass = 'log-success';
+      
+      logLine.innerHTML = `<span class="log-time">[${timestamp}]</span> <span class="${levelClass}">${template}</span>`;
+      logsScreen.appendChild(logLine);
+      logsScreen.scrollTop = logsScreen.scrollHeight;
+
+      // Keep max 40 log lines
+      if (logsScreen.children.length > 40) {
+        logsScreen.removeChild(logsScreen.firstChild);
+      }
+    };
+
+    // Initial logs
+    for (let i = 0; i < 6; i++) appendLog();
+    
+    // Interval for new logs
+    const logInterval = setInterval(appendLog, 3000);
+
+    if (pauseLogsBtn) {
+      pauseLogsBtn.addEventListener('click', () => {
+        logsPaused = !logsPaused;
+        pauseLogsBtn.textContent = logsPaused ? 'Resume Stream' : 'Pause Stream';
+      });
+    }
+
+    if (clearLogsBtn) {
+      clearLogsBtn.addEventListener('click', () => {
+        logsScreen.innerHTML = '';
+      });
+    }
+  }
 
 })();

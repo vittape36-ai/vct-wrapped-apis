@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VCT Wrapped APIs | Midnight Navy & Neon Sunset</title>
+  <title>VCT Wrapped</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
   <meta name="description" content="A hyper-premium storytelling landing page for VCT Wrapped APIs. Styled in midnight navy with neon sunset glowing edge glass and interactive hover physics.">
   
   <!-- Typography: Inter for body, Fira Code / SF Mono style for technical data -->
@@ -11,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/style.css?v=4">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
 </head>
 <body class="midnight-precision-theme">
@@ -45,35 +46,12 @@
             <span class="badge-pulse-glow"></span>
           </div>
           
-          <h1 class="hero-title">VCT Wrapped APIs</h1>
+          <h1 class="hero-title"><span class="dia-text-reveal">VCT Wrapped APIs</span></h1>
           <p class="hero-subtitle">
             Unifying multi-provider APIs behind single-gateway, failsafe wrapper endpoints. Active key pools, sub-5ms Redis caches, and automatic upstream failovers.
           </p>
 
-          <!-- Ask Anything AI-style Input Bar -->
-          <div class="ask-anything-wrapper reveal-elem" data-speed="1.05">
-            <div class="ask-anything-inner" id="ask-anything-box">
-              <i data-lucide="terminal" class="ask-icon-prefix"></i>
-              <input type="text" id="ask-anything-input" placeholder="Ask anything... (e.g., 'how failsafe works', 'rotate credentials')" autocomplete="off">
-              <span class="shortcut-key">⌘ K</span>
-              <button class="btn-ask-submit clickable" id="ask-submit-btn" title="Submit Inquiry">
-                <i data-lucide="chevron-right"></i>
-              </button>
-            </div>
-          </div>
 
-          <!-- Simulated Response Box inside Hero -->
-          <div class="hero-response-box" id="hero-response-box" style="display: none;">
-            <div class="response-header">
-              <div class="response-header-left">
-                <span class="response-status-dot"></span>
-                <span class="response-title">VCT AI Terminal</span>
-              </div>
-              <button class="btn-response-close" id="close-response-btn"><i data-lucide="x"></i></button>
-            </div>
-            <div class="response-body" id="hero-response-text"></div>
-          </div>
-          
           <div class="hero-ctas">
             <a href="/dashboard.html" class="btn-precision btn-primary clickable">Console Sandbox</a>
             <a href="#bento-section" class="btn-precision btn-secondary clickable">Explore Arsenal</a>
@@ -668,6 +646,6 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Main Application Script -->
-  <script src="/app.js"></script>
+  <script src="/app.js?v=4"></script>
 </body>
 </html>
