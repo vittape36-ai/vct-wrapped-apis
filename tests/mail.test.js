@@ -24,26 +24,24 @@ describe('Mail Service', () => {
     vi.clearAllMocks();
   });
 
-  it('should export sendMail function', async () => {
+  it('should export send function', async () => {
     const mailService = await import('../src/services/mail.service.js');
-    expect(typeof mailService.sendMail).toBe('function');
+    expect(typeof mailService.send).toBe('function');
   });
 
-  it('should export getTemplates function', async () => {
+  it('should export listTemplates function', async () => {
     const mailService = await import('../src/services/mail.service.js');
-    expect(typeof mailService.getTemplates).toBe('function');
+    expect(typeof mailService.listTemplates).toBe('function');
   });
 
-  it('getTemplates should return known templates', async () => {
-    const { getTemplates } = await import('../src/services/mail.service.js');
-    const templates = getTemplates();
+  it('listTemplates should return known templates', async () => {
+    const { listTemplates } = await import('../src/services/mail.service.js');
+    const templates = listTemplates();
     expect(Array.isArray(templates)).toBe(true);
     expect(templates.length).toBeGreaterThan(0);
-    templates.forEach((t) => {
-      expect(t).toHaveProperty('id');
-      expect(t).toHaveProperty('name');
-      expect(t).toHaveProperty('variables');
-    });
+    expect(templates).toContain('otp');
+    expect(templates).toContain('welcome');
+    expect(templates).toContain('alert');
   });
 });
 
