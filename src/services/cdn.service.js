@@ -49,7 +49,7 @@ export function getSignedUpload({ folder = 'vct', tags = [], maxBytes = 10_485_7
  */
 export function getSignedUrl(publicId, transforms = {}, ttlSeconds) {
   ensureConfig();
-  const ttl = ttlSeconds || config.cdn.signedUrlTtl;
+  const _ttl = ttlSeconds || config.cdn.signedUrlTtl;
 
   const transformation = [];
   if (transforms.width) transformation.push({ width: transforms.width });

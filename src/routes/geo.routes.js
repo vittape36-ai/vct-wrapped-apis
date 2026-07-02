@@ -15,8 +15,7 @@ router.get('/v1/geocode', async (req, res, next) => {
     const result = await geocode(q);
     return ok(res, result, { wrapper: 'geo.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 
@@ -31,8 +30,7 @@ router.get('/v1/reverse', async (req, res, next) => {
     const result = await reverseGeocode(parseFloat(lat), parseFloat(lng));
     return ok(res, result, { wrapper: 'geo.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 
@@ -47,8 +45,7 @@ router.get('/v1/suggest', async (req, res, next) => {
     const result = await autosuggest(q, { location, zoom, pod });
     return ok(res, result, { wrapper: 'geo.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 
@@ -66,8 +63,7 @@ router.post('/v1/distance', async (req, res, next) => {
     const result = await distanceMatrix(origins, destinations, { profile });
     return ok(res, result, { wrapper: 'geo.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 

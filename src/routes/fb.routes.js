@@ -17,8 +17,7 @@ router.post('/v1/auth/verify', async (req, res, next) => {
     const user = await fb.verifyToken(idToken);
     return ok(res, user, { wrapper: 'fb.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 
@@ -31,8 +30,7 @@ router.post('/v1/auth/create', async (req, res, next) => {
     const user = await fb.createUser(req.body);
     return ok(res, user, { wrapper: 'fb.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 
@@ -44,8 +42,7 @@ router.get('/v1/auth/user/:uid', async (req, res, next) => {
     const user = await fb.getUser(req.params.uid);
     return ok(res, user, { wrapper: 'fb.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 
@@ -60,8 +57,7 @@ router.post('/v1/auth/claims', async (req, res, next) => {
     const result = await fb.setClaims(uid, claims);
     return ok(res, result, { wrapper: 'fb.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 
@@ -76,8 +72,7 @@ router.get('/v1/db/:collection/:docId', async (req, res, next) => {
     if (!doc) return fail(res, 404, 'Document not found');
     return ok(res, doc, { wrapper: 'fb.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 
@@ -92,8 +87,7 @@ router.put('/v1/db/:collection/:docId', async (req, res, next) => {
     const result = await fb.setDoc(req.params.collection, req.params.docId, data, merge);
     return ok(res, result, { wrapper: 'fb.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 
@@ -106,8 +100,7 @@ router.post('/v1/db/:collection/query', async (req, res, next) => {
     const docs = await fb.queryDocs(req.params.collection, req.body);
     return ok(res, docs, { wrapper: 'fb.vidyacoddle.tech', count: docs.length });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 
@@ -119,8 +112,7 @@ router.delete('/v1/db/:collection/:docId', async (req, res, next) => {
     const result = await fb.deleteDoc(req.params.collection, req.params.docId);
     return ok(res, result, { wrapper: 'fb.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 
@@ -136,8 +128,7 @@ router.get('/v1/memora/:collection/:docId', async (req, res, next) => {
     if (!result) return fail(res, 404, 'Document not found');
     return ok(res, result, { wrapper: 'fb.vidyacoddle.tech', memora: true });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 

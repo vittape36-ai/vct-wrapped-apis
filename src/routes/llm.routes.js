@@ -23,8 +23,7 @@ router.post('/v1/chat', async (req, res, next) => {
     const result = await chat({ messages, model, provider, cache, options });
     return ok(res, result, { wrapper: 'llm.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 

@@ -1,7 +1,7 @@
 import { config } from '../config/env.js';
 import { retry } from '../utils/retry.js';
 import { cacheGet, cacheSet, cacheKey } from '../utils/cache.js';
-import { logger } from '../middleware/logger.js';
+
 
 let accessToken = null;
 let tokenExpiry = 0;

@@ -12,10 +12,9 @@ const router = Router();
 router.post('/v1/upload/sign', async (req, res, next) => {
   try {
     const result = cdn.getSignedUpload(req.body);
-    ok(res, result, { wrapper: 'cdn.vidyacoddle.tech' });
+    return ok(res, result, { wrapper: 'cdn.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 
@@ -28,15 +27,13 @@ router.post('/v1/url/sign', async (req, res, next) => {
   try {
     const { publicId, transforms, ttlSeconds } = req.body;
     if (!publicId) {
-      fail(res, 400, 'publicId is required');
-      return;
+      return fail(res, 400, 'publicId is required');
     }
 
     const url = cdn.getSignedUrl(publicId, transforms, ttlSeconds);
-    ok(res, { url, publicId }, { wrapper: 'cdn.vidyacoddle.tech' });
+    return ok(res, { url, publicId }, { wrapper: 'cdn.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 
@@ -49,15 +46,13 @@ router.post('/v1/transform', async (req, res, next) => {
   try {
     const { publicId, transforms } = req.body;
     if (!publicId || !transforms) {
-      fail(res, 400, 'publicId and transforms are required');
-      return;
+      return fail(res, 400, 'publicId and transforms are required');
     }
 
     const result = cdn.transform(publicId, transforms);
-    ok(res, result, { wrapper: 'cdn.vidyacoddle.tech' });
+    return ok(res, result, { wrapper: 'cdn.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 
@@ -69,8 +64,7 @@ router.delete('/v1/asset/:publicId', async (req, res, next) => {
     const result = await cdn.deleteAsset(req.params.publicId);
     return ok(res, result, { wrapper: 'cdn.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 
@@ -82,8 +76,7 @@ router.get('/v1/asset/:publicId', async (req, res, next) => {
     const result = await cdn.getAsset(req.params.publicId);
     return ok(res, result, { wrapper: 'cdn.vidyacoddle.tech' });
   } catch (err) {
-    next(err);
-    return;
+    return next(err);
   }
 });
 

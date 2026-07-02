@@ -44,7 +44,7 @@ async function chatOpenAI(messages, model, options = {}) {
 /**
  * Chat completion via Gemini.
  */
-async function chatGemini(messages, model, options = {}) {
+async function chatGemini(messages, model, _options = {}) {
   const apiKey = geminiVault.next();
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
