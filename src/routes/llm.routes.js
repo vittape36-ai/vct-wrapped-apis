@@ -21,9 +21,10 @@ router.post('/v1/chat', async (req, res, next) => {
     }
 
     const result = await chat({ messages, model, provider, cache, options });
-    ok(res, result, { wrapper: 'llm.vidyacoddle.tech' });
+    return ok(res, result, { wrapper: 'llm.vidyacoddle.tech' });
   } catch (err) {
     next(err);
+    return;
   }
 });
 
@@ -32,7 +33,7 @@ router.post('/v1/chat', async (req, res, next) => {
  * List available models and providers.
  */
 router.get('/v1/models', (_req, res) => {
-  ok(res, listModels(), { wrapper: 'llm.vidyacoddle.tech' });
+  return ok(res, listModels(), { wrapper: 'llm.vidyacoddle.tech' });
 });
 
 export default router;

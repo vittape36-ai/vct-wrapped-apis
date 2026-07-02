@@ -11,12 +11,16 @@ const router = Router();
 router.post('/v1/send', async (req, res, next) => {
   try {
     const { to } = req.body;
-    if (!to) return fail(res, 400, 'to address is required');
+    if (!to) {
+      fail(res, 400, 'to address is required');
+      return;
+    }
 
     const result = await send(req.body);
     ok(res, result, { wrapper: 'mail.vidyacoddle.tech' });
   } catch (err) {
     next(err);
+    return;
   }
 });
 
@@ -27,12 +31,16 @@ router.post('/v1/send', async (req, res, next) => {
 router.post('/v1/batch', async (req, res, next) => {
   try {
     const { emails } = req.body;
-    if (!emails) return fail(res, 400, 'emails array is required');
+    if (!emails) {
+      fail(res, 400, 'emails array is required');
+      return;
+    }
 
     const results = await sendBatch(emails);
     ok(res, results, { wrapper: 'mail.vidyacoddle.tech', count: results.length });
   } catch (err) {
     next(err);
+    return;
   }
 });
 

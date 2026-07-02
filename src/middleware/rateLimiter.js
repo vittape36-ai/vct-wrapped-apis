@@ -1,5 +1,4 @@
 import rateLimit from 'express-rate-limit';
-import { config } from '../config/env.js';
 
 /**
  * Per-key rate limiter.

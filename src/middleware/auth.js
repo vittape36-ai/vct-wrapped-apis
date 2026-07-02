@@ -19,6 +19,7 @@ export function authenticate(req, res, next) {
   }
 
   // Attach caller identity for logging
-  req.vctCaller = { keyId: key.slice(0, 8) + '...', plan: 'beta' };
+  req.vctCaller = { keyId: `${key.slice(0, 8)}...`, plan: 'beta' };
   next();
+  return undefined;
 }

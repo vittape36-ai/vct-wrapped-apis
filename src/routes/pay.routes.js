@@ -17,6 +17,7 @@ router.post('/v1/order', async (req, res, next) => {
     ok(res, result, { wrapper: 'pay.vidyacoddle.tech' });
   } catch (err) {
     next(err);
+    return;
   }
 });
 
@@ -29,16 +30,19 @@ router.post('/v1/payout', async (req, res, next) => {
     const { amount, account, purpose, idempotencyKey, splits } = req.body;
 
     if (!amount || !account) {
-      return fail(res, 400, 'amount and account are required');
+      fail(res, 400, 'amount and account are required');
+      return;
     }
     if (!idempotencyKey) {
-      return fail(res, 400, 'idempotencyKey is required to prevent double payouts');
+      fail(res, 400, 'idempotencyKey is required to prevent double payouts');
+      return;
     }
 
     const result = await payout({ amount, account, purpose, idempotencyKey, splits });
     ok(res, result, { wrapper: 'pay.vidyacoddle.tech' });
   } catch (err) {
     next(err);
+    return;
   }
 });
 
@@ -52,9 +56,10 @@ router.post('/v1/webhook', async (req, res, next) => {
     if (!signature) return fail(res, 400, 'Missing x-razorpay-signature header');
 
     const result = verifyWebhook(req.body, signature);
-    ok(res, result, { wrapper: 'pay.vidyacoddle.tech' });
+    return ok(res, result, { wrapper: 'pay.vidyacoddle.tech' });
   } catch (err) {
     next(err);
+    return;
   }
 });
 
@@ -65,9 +70,10 @@ router.post('/v1/webhook', async (req, res, next) => {
 router.get('/v1/payment/:id', async (req, res, next) => {
   try {
     const result = await fetchPayment(req.params.id);
-    ok(res, result, { wrapper: 'pay.vidyacoddle.tech' });
+    return ok(res, result, { wrapper: 'pay.vidyacoddle.tech' });
   } catch (err) {
     next(err);
+    return;
   }
 });
 
