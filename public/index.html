@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VCT Wrapped APIs | Midnight Navy & Neon Sunset</title>
+  <meta name="description" content="A hyper-premium storytelling landing page for VCT Wrapped APIs. Styled in midnight navy with neon sunset glowing edge glass and interactive hover physics.">
+  
+  <!-- Typography: Inter for body, Fira Code / SF Mono style for technical data -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body class="midnight-precision-theme">
+
+  <!-- Subtle radial glow spotlight background -->
+  <div class="spotlight-bg" id="spotlight-bg"></div>
+  
+  <!-- Premium Slate Tech Grid Overlay -->
+  <div class="grid-overlay"></div>
+  
+  <!-- Interactive Canvas Particle Starfield Background -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- Custom fluid cursor -->
+  <div id="custom-cursor"></div>
+  <div id="custom-cursor-dot"></div>
+
+  <!-- Smooth scroll wrapper -->
+  <div id="scroll-container">
+
+    <!-- HERO SECTION (FULLY OPEN, NO BOX WRAP) -->
+    <section id="hero-section" class="section-hero">
+      <div id="hero-side-rays" class="side-rays-container"></div>
+      
+      <!-- Spotlight container -->
+      <div class="container hero-wrapper">
+        <div class="hero-content-wrapper reveal-elem" data-speed="1.0">
+          <div class="hero-top-badge clickable">
+            <i data-lucide="sparkles" class="badge-icon"></i>
+            <span>VCT LABS GATEWAY</span>
+            <span class="badge-pulse-glow"></span>
+          </div>
+          
+          <h1 class="hero-title">VCT Wrapped APIs</h1>
+          <p class="hero-subtitle">
+            Unifying multi-provider APIs behind single-gateway, failsafe wrapper endpoints. Active key pools, sub-5ms Redis caches, and automatic upstream failovers.
+          </p>
+
+          <!-- Ask Anything AI-style Input Bar -->
+          <div class="ask-anything-wrapper reveal-elem" data-speed="1.05">
+            <div class="ask-anything-inner" id="ask-anything-box">
+              <i data-lucide="terminal" class="ask-icon-prefix"></i>
+              <input type="text" id="ask-anything-input" placeholder="Ask anything... (e.g., 'how failsafe works', 'rotate credentials')" autocomplete="off">
+              <span class="shortcut-key">⌘ K</span>
+              <button class="btn-ask-submit clickable" id="ask-submit-btn" title="Submit Inquiry">
+                <i data-lucide="chevron-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Simulated Response Box inside Hero -->
+          <div class="hero-response-box" id="hero-response-box" style="display: none;">
+            <div class="response-header">
+              <div class="response-header-left">
+                <span class="response-status-dot"></span>
+                <span class="response-title">VCT AI Terminal</span>
+              </div>
+              <button class="btn-response-close" id="close-response-btn"><i data-lucide="x"></i></button>
+            </div>
+            <div class="response-body" id="hero-response-text"></div>
+          </div>
+          
+          <div class="hero-ctas">
+            <a href="/dashboard.html" class="btn-precision btn-primary clickable">Console Sandbox</a>
+            <a href="#bento-section" class="btn-precision btn-secondary clickable">Explore Arsenal</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1.5: INTERACTIVE METRICS TICKER -->
+    <section id="metrics-section" class="section-metrics">
+      <div class="container">
+        <div class="metrics-grid">
+          <div class="precision-card metric-card reveal-elem" data-speed="1.02">
+            <div class="card-glow-layer"></div>
+            <span class="metric-tag">INGRESS TRAFFIC</span>
+            <div class="metric-value" id="metric-requests">1,248,390</div>
+            <span class="metric-sub">Real-time requests handled</span>
+          </div>
+
+          <div class="precision-card metric-card reveal-elem" data-speed="1.05">
+            <div class="card-glow-layer"></div>
+            <span class="metric-tag">CACHE RATIO</span>
+            <div class="metric-value" id="metric-cache">98.4%</div>
+            <span class="metric-sub">Served by Redis edge memory</span>
+          </div>
+
+          <div class="precision-card metric-card reveal-elem" data-speed="1.08">
+            <div class="card-glow-layer"></div>
+            <span class="metric-tag">AVERAGE LATENCY</span>
+            <div class="metric-value" id="metric-latency">4.2ms</div>
+            <span class="metric-sub">Gateway resolution time</span>
+          </div>
+
+          <div class="precision-card metric-card reveal-elem" data-speed="1.11">
+            <div class="card-glow-layer"></div>
+            <span class="metric-tag">ACTIVE POOLS</span>
+            <div class="metric-value">12 / 12</div>
+            <span class="metric-sub">OpenAI, Gemini, Resend, etc.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: THE GRID (LIQUID BENTO WITH INTERACTIVE TECH VISUALS) -->
+    <section id="bento-section" class="section-bento">
+      <div class="container">
+        <div class="section-header reveal-elem">
+          <span class="section-tag">01 // WRAPPERS</span>
+          <h2 class="section-title">The API Arsenal</h2>
+          <p class="section-desc">Six core wrappers serving enterprise needs under unified authentication.</p>
+        </div>
+
+        <div class="bento-grid">
+          
+          <!-- LLM Card (Wide) -->
+          <div class="precision-card bento-card bento-wide reveal-elem clickable" data-service="llm" data-speed="1.02">
+            <div class="card-glow-layer"></div>
+            <div class="bento-split-layout">
+              <div class="card-body">
+                <div class="card-top">
+                  <div class="card-icon"><div class="sunset-icon-glow"></div><i data-lucide="sparkles"></i></div>
+                  <div class="active-badge"><span class="badge-dot"></span>Active</div>
+                </div>
+                <h3>LLM Wrapper</h3>
+                <span class="card-route">POST /llm/v1/chat</span>
+                <p>Automatically rotates OpenAI keys; falls back to Gemini in real-time if rate limits or timeout thresholds trigger.</p>
+                <div class="card-tags">
+                  <span class="tag">Dual-Provider</span>
+                  <span class="tag">Failover Engine</span>
+                </div>
+              </div>
+              
+              <!-- Premium AI Orb Visual -->
+              <div class="bento-visual llm-visual">
+                <div class="ai-orbit ring-1"></div>
+                <div class="ai-orbit ring-2"></div>
+                <div class="ai-core-orb"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payments Card (Square) -->
+          <div class="precision-card bento-card bento-square reveal-elem clickable" data-service="pay" data-speed="1.06">
+            <div class="card-glow-layer"></div>
+            <div class="card-top">
+              <div class="card-icon"><div class="sunset-icon-glow"></div><i data-lucide="credit-card"></i></div>
+              <div class="active-badge"><span class="badge-dot"></span>Active</div>
+            </div>
+            <div class="card-body">
+              <h3>Pay Splitter</h3>
+              <span class="card-route">POST /pay/v1/order</span>
+              <p>Automated RazorpayX payout verification ledgers and split disbursement logs.</p>
+              <div class="card-tags">
+                <span class="tag">RazorpayX</span>
+              </div>
+            </div>
+            <!-- Premium Split Bar Visual -->
+            <div class="bento-visual pay-visual">
+              <div class="split-bar bar-1"></div>
+              <div class="split-bar bar-2"></div>
+              <div class="split-bar bar-3"></div>
+              <div class="split-indicator"></div>
+            </div>
+          </div>
+
+          <!-- Firebase Card (Square) -->
+          <div class="precision-card bento-card bento-square reveal-elem clickable" data-service="fb" data-speed="1.04">
+            <div class="card-glow-layer"></div>
+            <div class="card-top">
+              <div class="card-icon"><div class="sunset-icon-glow"></div><i data-lucide="shield-check"></i></div>
+              <div class="active-badge"><span class="badge-dot"></span>Active</div>
+            </div>
+            <div class="card-body">
+              <h3>Firebase DB</h3>
+              <span class="card-route">POST /fb/v1/auth/verify</span>
+              <p>Injected verification tokens and Firestore security rules verified at the gateway edge.</p>
+              <div class="card-tags">
+                <span class="tag">Secure Cache</span>
+              </div>
+            </div>
+            <!-- Concentric Database Security Visual -->
+            <div class="bento-visual fb-visual">
+              <div class="db-disc disc-1"></div>
+              <div class="db-disc disc-2"></div>
+              <div class="db-disc disc-3"></div>
+              <div class="db-shield-node"><i data-lucide="lock"></i></div>
+            </div>
+          </div>
+
+          <!-- CDN Card (Wide) -->
+          <div class="precision-card bento-card bento-wide reveal-elem clickable" data-service="cdn" data-speed="1.03">
+            <div class="card-glow-layer"></div>
+            <div class="bento-split-layout">
+              <div class="card-body">
+                <div class="card-top">
+                  <div class="card-icon"><div class="sunset-icon-glow"></div><i data-lucide="image"></i></div>
+                  <div class="active-badge"><span class="badge-dot"></span>Active</div>
+                </div>
+                <h3>CDN Transformer</h3>
+                <span class="card-route">POST /cdn/v1/url/sign</span>
+                <p>Responsive media uploads and signed Cloudinary URLs created with transient expiry validation.</p>
+                <div class="card-tags">
+                  <span class="tag">Cloudinary</span>
+                  <span class="tag">Signed Media</span>
+                </div>
+              </div>
+              
+              <!-- Responsive Image Comparison Visual -->
+              <div class="bento-visual cdn-visual">
+                <div class="cdn-frame image-before"></div>
+                <div class="cdn-frame image-after"></div>
+                <div class="cdn-slider-handle">
+                  <i data-lucide="arrow-left-right"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mail Card (Square) -->
+          <div class="precision-card bento-card bento-square reveal-elem clickable" data-service="mail" data-speed="1.07">
+            <div class="card-glow-layer"></div>
+            <div class="card-top">
+              <div class="card-icon"><div class="sunset-icon-glow"></div><i data-lucide="mail"></i></div>
+              <div class="active-badge"><span class="badge-dot"></span>Active</div>
+            </div>
+            <div class="card-body">
+              <h3>Mail Dispatch</h3>
+              <span class="card-route">POST /mail/v1/send</span>
+              <p>Pre-packaged Resend emails built from Tailwind-integrated layouts with instant dispatch triggers.</p>
+              <div class="card-tags">
+                <span class="tag">Resend</span>
+              </div>
+            </div>
+            <!-- Sliding Paper Plane Mail Visual -->
+            <div class="bento-visual mail-visual">
+              <div class="mail-trail"></div>
+              <div class="mail-paper-plane"><i data-lucide="send"></i></div>
+            </div>
+          </div>
+
+          <!-- Geo Card (Wide) -->
+          <div class="precision-card bento-card bento-wide reveal-elem clickable" data-service="geo" data-speed="1.02">
+            <div class="card-glow-layer"></div>
+            <div class="bento-split-layout">
+              <div class="card-body">
+                <div class="card-top">
+                  <div class="card-icon"><div class="sunset-icon-glow"></div><i data-lucide="map-pin"></i></div>
+                  <div class="active-badge"><span class="badge-dot"></span>Active</div>
+                </div>
+                <h3>Geo Matrix</h3>
+                <span class="card-route">GET /geo/v1/geocode</span>
+                <p>Optimized MapMyIndia geolocation indices, reverse routing metrics, and distance maps.</p>
+                <div class="card-tags">
+                  <span class="tag">MapMyIndia</span>
+                  <span class="tag">Geocoding</span>
+                </div>
+              </div>
+              
+              <!-- Geolocator Radar Ping Visual -->
+              <div class="bento-visual geo-visual">
+                <div class="radar-ping ping-1"></div>
+                <div class="radar-ping ping-2"></div>
+                <div class="geo-pin-node"><i data-lucide="navigation"></i></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2.5: INTERACTIVE CONFIGURATION PLAYGROUND -->
+    <section id="playground-section" class="section-playground">
+      <div class="container">
+        <div class="section-header reveal-elem">
+          <span class="section-tag">02 // CONFIGURATOR</span>
+          <h2 class="section-title">Visual SDK Playground</h2>
+          <p class="section-desc">Toggle features, caches, and fallbacks to compile your client setup code instantly.</p>
+        </div>
+
+        <div class="playground-layout reveal-elem" data-speed="1.05">
+          <!-- Controls Panel -->
+          <div class="precision-card playground-controls">
+            <div class="card-glow-layer"></div>
+            <h3>SDK Options</h3>
+            <p class="playground-intro-text">Tune config variables to see real-time updates.</p>
+
+            <div class="control-group">
+              <label for="config-service">Active Service Wrapper</label>
+              <select id="config-service">
+                <option value="llm">LLM (OpenAI + Gemini)</option>
+                <option value="pay">Payments Splitter (RazorpayX)</option>
+                <option value="fb">Firebase Security DB</option>
+                <option value="cdn">CDN Signed URL (Cloudinary)</option>
+                <option value="mail">Mail Dispatch (Resend)</option>
+                <option value="geo">Geo Location SUGGEST</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <div class="toggle-flex">
+                <span>Edge Redis Caching</span>
+                <div class="tactile-toggle active" id="toggle-cache">
+                  <span class="toggle-thumb"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="toggle-flex">
+                <span>Automatic Fallback</span>
+                <div class="tactile-toggle active" id="toggle-fallback">
+                  <span class="toggle-thumb"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="slider-header">
+                <span>Retry Backoff Delay</span>
+                <span id="slider-val">200ms</span>
+              </div>
+              <input type="range" id="config-retry" min="50" max="1000" step="50" value="200" class="playground-slider">
+            </div>
+          </div>
+
+          <!-- Live Code Compiler Box -->
+          <div class="precision-card playground-compiler">
+            <div class="card-glow-layer"></div>
+            <div class="compiler-header">
+              <div class="compiler-status">
+                <span class="status-light-on"></span>
+                <span>COMPILED SDK SOURCE</span>
+              </div>
+            </div>
+            <div class="compiler-body">
+              <pre><code class="language-javascript" id="playground-code-display">/* Loading compiler... */</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: NARRATIVE SCROLL (DATA FLOW) -->
+    <section id="flow-section" class="section-data-flow">
+      <div class="container">
+        <div class="section-header reveal-elem">
+          <span class="section-tag">03 // PIPELINE</span>
+          <h2 class="section-title">Visualized Pipeline</h2>
+          <p class="section-desc">Observe requests passing through intelligent security, caching, and key-rotation filters on scroll.</p>
+        </div>
+
+        <div class="vertical-pipeline-wrapper">
+          <!-- Central connecting SVG line -->
+          <div class="svg-container">
+            <svg class="vertical-pipeline-svg" viewBox="0 0 100 800" preserveAspectRatio="none">
+              <!-- Background path -->
+              <path id="flow-line-bg" d="M 50,0 L 50,800" stroke="rgba(255, 255, 255, 0.03)" stroke-width="2" fill="none" />
+              <!-- Scroll-active glowing path -->
+              <path id="flow-line-active" d="M 50,0 L 50,800" stroke="url(#flow-gradient)" stroke-width="3.5" fill="none" stroke-dasharray="800" stroke-dashoffset="800" />
+              <defs>
+                <linearGradient id="flow-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#FF8C00" />
+                  <stop offset="50%" stop-color="#FF007F" />
+                  <stop offset="100%" stop-color="#8A2BE2" />
+                </linearGradient>
+              </defs>
+            </svg>
+            
+            <!-- Floating light packet that travels along the scroll line -->
+            <div class="data-packet-indicator" id="data-packet-dot"></div>
+          </div>
+
+          <!-- Step nodes left & right -->
+          <div class="pipeline-steps">
+            
+            <div class="pipeline-step step-left" id="step-node-1">
+              <div class="precision-card step-card reveal-elem">
+                <span class="step-badge">01 / INGRESS</span>
+                <h4>App Client Request</h4>
+                <p>An API call enters our system with a single unified authorization token.</p>
+                <div class="step-icon-corner"><i data-lucide="smartphone"></i></div>
+              </div>
+            </div>
+
+            <div class="pipeline-step step-right" id="step-node-2">
+              <div class="precision-card step-card reveal-elem">
+                <span class="step-badge">02 / CACHE SEARCH</span>
+                <h4>Edge Redis Cache</h4>
+                <p>Sub-5ms in-memory queries check for identical payloads to bypass heavy downstream compute.</p>
+                <div class="step-icon-corner"><i data-lucide="database"></i></div>
+              </div>
+            </div>
+
+            <div class="pipeline-step step-left" id="step-node-3">
+              <div class="precision-card step-card reveal-elem">
+                <span class="step-badge">03 / HEALTH CHECKS</span>
+                <h4>Round-Robin Key Vault</h4>
+                <p>Validates key pools. Swaps active keys automatically when provider limits or cooldown timers engage.</p>
+                <div class="step-icon-corner"><i data-lucide="key-round"></i></div>
+              </div>
+            </div>
+
+            <div class="pipeline-step step-right" id="step-node-4">
+              <div class="precision-card step-card reveal-elem">
+                <span class="step-badge">04 / RESOLUTION</span>
+                <h4>Failsafe Route Dispatch</h4>
+                <p>In case of timeout or server error, fallback streams execute instantly and sign back response.</p>
+                <div class="step-icon-corner"><i data-lucide="shield-alert"></i></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3.5: UPTIME HEALTH LEDGER -->
+    <section id="status-section" class="section-status">
+      <div class="container">
+        <div class="section-header reveal-elem">
+          <span class="section-tag">04 // HEALTH</span>
+          <h2 class="section-title">Gateway Health Ledger</h2>
+          <p class="section-desc">Active operational uptime matrix monitored live across the past 90 days.</p>
+        </div>
+
+        <div class="status-grid reveal-elem" data-speed="1.06">
+          <!-- Card 1 -->
+          <div class="precision-card status-card">
+            <div class="card-glow-layer"></div>
+            <div class="status-card-top">
+              <h4>LLM Gateway</h4>
+              <span class="status-percentage">100.0%</span>
+            </div>
+            <div class="uptime-bars-container" data-service="llm"></div>
+            <div class="status-card-bottom">
+              <span>90 days ago</span>
+              <span class="operational-badge"><span class="badge-dot"></span>Operational</span>
+              <span>Today</span>
+            </div>
+          </div>
+          <!-- Card 2 -->
+          <div class="precision-card status-card">
+            <div class="card-glow-layer"></div>
+            <div class="status-card-top">
+              <h4>Pay Splitter</h4>
+              <span class="status-percentage">99.98%</span>
+            </div>
+            <div class="uptime-bars-container" data-service="pay"></div>
+            <div class="status-card-bottom">
+              <span>90 days ago</span>
+              <span class="operational-badge"><span class="badge-dot"></span>Operational</span>
+              <span>Today</span>
+            </div>
+          </div>
+          <!-- Card 3 -->
+          <div class="precision-card status-card">
+            <div class="card-glow-layer"></div>
+            <div class="status-card-top">
+              <h4>Firebase Cache</h4>
+              <span class="status-percentage">100.0%</span>
+            </div>
+            <div class="uptime-bars-container" data-service="fb"></div>
+            <div class="status-card-bottom">
+              <span>90 days ago</span>
+              <span class="operational-badge"><span class="badge-dot"></span>Operational</span>
+              <span>Today</span>
+            </div>
+          </div>
+          <!-- Card 4 -->
+          <div class="precision-card status-card">
+            <div class="card-glow-layer"></div>
+            <div class="status-card-top">
+              <h4>CDN Transformer</h4>
+              <span class="status-percentage">99.99%</span>
+            </div>
+            <div class="uptime-bars-container" data-service="cdn"></div>
+            <div class="status-card-bottom">
+              <span>90 days ago</span>
+              <span class="operational-badge"><span class="badge-dot"></span>Operational</span>
+              <span>Today</span>
+            </div>
+          </div>
+          <!-- Card 5 -->
+          <div class="precision-card status-card">
+            <div class="card-glow-layer"></div>
+            <div class="status-card-top">
+              <h4>Mail Dispatch</h4>
+              <span class="status-percentage">100.0%</span>
+            </div>
+            <div class="uptime-bars-container" data-service="mail"></div>
+            <div class="status-card-bottom">
+              <span>90 days ago</span>
+              <span class="operational-badge"><span class="badge-dot"></span>Operational</span>
+              <span>Today</span>
+            </div>
+          </div>
+          <!-- Card 6 -->
+          <div class="precision-card status-card">
+            <div class="card-glow-layer"></div>
+            <div class="status-card-top">
+              <h4>Geo Suggestions</h4>
+              <span class="status-percentage">99.95%</span>
+            </div>
+            <div class="uptime-bars-container" data-service="geo"></div>
+            <div class="status-card-bottom">
+              <span>90 days ago</span>
+              <span class="operational-badge"><span class="badge-dot"></span>Operational</span>
+              <span>Today</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: TECHNICAL DEEP DIVE -->
+    <section id="terminal-section" class="section-terminal">
+      <div class="container">
+        <div class="section-header reveal-elem">
+          <span class="section-tag">05 // INTEGRATION</span>
+          <h2 class="section-title">Technical Integration</h2>
+          <p class="section-desc">Integrate in less than three lines of code. Watch the terminal auto-type when scrolled into view.</p>
+        </div>
+
+        <div class="precision-card terminal-glass-box reveal-elem" id="terminal-box">
+          <div class="terminal-header">
+            <div class="traffic-lights">
+              <span class="light red"></span>
+              <span class="light yellow"></span>
+              <span class="light green"></span>
+            </div>
+            <div class="terminal-title">vct-wrapped-gateway-integration.js</div>
+            <button class="btn-copy-code clickable" id="btn-copy-code" title="Copy Code">
+              <i data-lucide="copy" class="copy-icon"></i>
+            </button>
+          </div>
+          <div class="terminal-body">
+            <!-- Target for typing animation -->
+            <pre><code class="language-javascript" id="typed-code-target">/* Scroll here to view integration... */</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4.5: INTERACTIVE ACCORDION FAQ -->
+    <section id="faq-section" class="section-faq">
+      <div class="container">
+        <div class="section-header reveal-elem">
+          <span class="section-tag">06 // FAQS</span>
+          <h2 class="section-title">System Inquiries</h2>
+          <p class="section-desc">Exploring structural inquiries and deployment operations.</p>
+        </div>
+
+        <div class="faq-accordion reveal-elem" data-speed="1.04">
+          <!-- Item 1 -->
+          <div class="precision-card faq-item">
+            <div class="card-glow-layer"></div>
+            <div class="faq-question clickable">
+              <span>How does the failover gateway model behave?</span>
+              <i data-lucide="chevron-down" class="faq-chevron"></i>
+            </div>
+            <div class="faq-answer">
+              <p>We monitor timeouts and rate exceptions inline (like HTTP 429 and 500s). If an active provider fails to respond within set bounds, VCT immediately diverts requests to standby provider pools (e.g. switching from OpenAI to Gemini) in under 12ms.</p>
+            </div>
+          </div>
+          <!-- Item 2 -->
+          <div class="precision-card faq-item">
+            <div class="card-glow-layer"></div>
+            <div class="faq-question clickable">
+              <span>Is there a latency cost for wrapping requests?</span>
+              <i data-lucide="chevron-down" class="faq-chevron"></i>
+            </div>
+            <div class="faq-answer">
+              <p>No. Our gateway is running on optimized V8 edge routines adding less than 1.2ms of overhead. With Redis Edge Caching enabled, repeated queries bypass upstream compilation entirely, serving requests in under 5ms.</p>
+            </div>
+          </div>
+          <!-- Item 3 -->
+          <div class="precision-card faq-item">
+            <div class="card-glow-layer"></div>
+            <div class="faq-question clickable">
+              <span>How does key cooldown protect credentials?</span>
+              <i data-lucide="chevron-down" class="faq-chevron"></i>
+            </div>
+            <div class="faq-answer">
+              <p>API keys rotate inside an active queue. When an upstream key hits a rate restriction (HTTP 429), it is tagged with a cooling interval and shifted to the back of the queue. Subsequent calls run immediately on fresh credentials.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="narrative-footer container">
+      <div class="footer-left">
+        &copy; 2026 Vidya Coddle Tech. Designed with Midnight Precision.
+      </div>
+      <div class="footer-right">
+        <a href="/health" target="_blank" class="clickable">Uptime</a>
+        <a href="/wrappers" target="_blank" class="clickable">Gateway Spec</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Progressive Blur for Floating Dock -->
+    <div class="progressive-blur-bottom"></div>
+    
+    <!-- APPLE STYLE FLOATING DOCK NAVBAR -->
+  <nav class="floating-dock-wrapper">
+    <div class="floating-dock" id="floating-dock">
+      <a href="#hero-section" class="dock-item clickable" title="Precision Launch">
+        <i data-lucide="home" class="dock-icon"></i>
+        <span class="dock-tooltip">Launch</span>
+      </a>
+      <a href="#bento-section" class="dock-item clickable" title="The API Arsenal">
+        <i data-lucide="layout-grid" class="dock-icon"></i>
+        <span class="dock-tooltip">Arsenal</span>
+      </a>
+      <a href="#playground-section" class="dock-item clickable" title="Playground Tuning">
+        <i data-lucide="sliders" class="dock-icon"></i>
+        <span class="dock-tooltip">Playground</span>
+      </a>
+      <a href="#flow-section" class="dock-item clickable" title="Pipeline Flow">
+        <i data-lucide="git-commit" class="dock-icon"></i>
+        <span class="dock-tooltip">Pipeline</span>
+      </a>
+      <a href="#terminal-section" class="dock-item clickable" title="Deep Dive">
+        <i data-lucide="terminal" class="dock-icon"></i>
+        <span class="dock-tooltip">Terminal</span>
+      </a>
+      <a href="#faq-section" class="dock-item clickable" title="System FAQs">
+        <i data-lucide="help-circle" class="dock-icon"></i>
+        <span class="dock-tooltip">FAQs</span>
+      </a>
+      <a href="/dashboard.html" class="dock-item clickable" title="Developer Console">
+        <i data-lucide="cpu" class="dock-icon"></i>
+        <span class="dock-tooltip">Console</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- CDNs for External Libraries -->
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <!-- Lenis for smooth-scroll -->
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+  <!-- Prism.js for syntax highlighting -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Main Application Script -->
+  <script src="/app.js"></script>
+</body>
+</html>

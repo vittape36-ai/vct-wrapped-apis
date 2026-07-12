@@ -61,11 +61,11 @@ describe('LLM Service', () => {
 
   it('listModels should return provider-grouped models', async () => {
     const { listModels } = await import('../src/services/llm.service.js');
-    const models = listModels();
-    expect(models).toHaveProperty('openai');
-    expect(models).toHaveProperty('gemini');
-    expect(models.openai).toHaveProperty('models');
-    expect(models.gemini).toHaveProperty('models');
+    const result = listModels();
+    expect(result).toHaveProperty('openai');
+    expect(result).toHaveProperty('gemini');
+    expect(Array.isArray(result.openai.models)).toBe(true);
+    expect(Array.isArray(result.gemini.models)).toBe(true);
   });
 });
 
