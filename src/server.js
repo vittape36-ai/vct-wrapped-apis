@@ -19,6 +19,7 @@ import fbRoutes from './routes/fb.routes.js';
 import cdnRoutes from './routes/cdn.routes.js';
 import mailRoutes from './routes/mail.routes.js';
 import geoRoutes from './routes/geo.routes.js';
+import adminRoutes from './routes/admin.routes.js';
 
 const app = express();
 
@@ -78,6 +79,7 @@ app.use('/fb',   authenticate, defaultLimiter, fbRoutes);
 app.use('/cdn',  authenticate, defaultLimiter, cdnRoutes);
 app.use('/mail', authenticate, defaultLimiter, mailRoutes);
 app.use('/geo',  authenticate, defaultLimiter, geoRoutes);
+app.use('/admin/api', adminRoutes);
 
 // ───────────── 404 ─────────────
 app.use((_req, res) => {
@@ -107,6 +109,36 @@ const server = app.listen(config.port, () => {
   } catch {
     logger.warn('⚠️  Redis not available');
   }
+
+  // ───────────── Start gRPC ─────────────
+  import('@grpc/grpc-js').then((grpc) => {
+    import('@grpc/proto-loader').then((protoLoader) => {
+      import('./services/llm.service.js').then(({ chat }) => {
+        const packageDefinition = protoLoader.loadSync('src/proto/llm.proto');
+        const proto = grpc.loadPackageDefinition(packageDefinition).vct.llm;
+        const grpcServer = new grpc.Server();
+
+        grpcServer.addService(proto.LlmService.service, {
+          Chat: async (call, callback) => {
+            try {
+              const result = await chat({
+                messages: [{ role: 'user', content: call.request.message }]
+              });
+              callback(null, { content: result.content });
+            } catch (err) {
+              callback({ code: grpc.status.INTERNAL, details: err.message });
+            }
+          }
+        });
+
+        grpcServer.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
+          logger.info('🚀 gRPC server running on port 50051');
+        });
+      });
+    });
+  }).catch(() => {
+    logger.warn('⚠️ gRPC dependencies not installed yet.');
+  });
 });
 
 // ───────────── Graceful Shutdown ─────────────

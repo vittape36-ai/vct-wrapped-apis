@@ -35,4 +35,31 @@ router.get('/v1/models', (_req, res) => {
   return ok(res, listModels(), { wrapper: 'llm.vidyacoddle.tech' });
 });
 
+/**
+ * POST /llm/v1/chat/stream
+ * Stream responses using Server-Sent Events (SSE)
+ */
+router.post('/v1/chat/stream', async (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+
+  try {
+    const { streamOpenAI } = await import('../services/llm.service.js');
+    const stream = await streamOpenAI(req.body.messages, req.body.model);
+
+    for await (const chunk of stream) {
+      const content = chunk.choices[0]?.delta?.content || '';
+      if (content) {
+        res.write(`data: ${JSON.stringify({ text: content })}\n\n`);
+      }
+    }
+    res.write('data: [DONE]\n\n');
+    res.end();
+  } catch (err) {
+    res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`);
+    res.end();
+  }
+});
+
 export default router;

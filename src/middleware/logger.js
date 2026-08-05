@@ -1,6 +1,35 @@
 import winston from 'winston';
 import { config } from '../config/env.js';
 
+import Transport from 'winston-transport';
+
+class ClickHouseTransport extends Transport {
+  constructor(opts) {
+    super(opts);
+    this.buffer = [];
+    setInterval(() => this.flush(), 5000); // Flush every 5s
+  }
+
+  log(info, callback) {
+    this.buffer.push(info);
+    callback();
+  }
+
+  async flush() {
+    if (this.buffer.length === 0) return;
+    const data = this.buffer.splice(0, this.buffer.length);
+    try {
+      // Send standard HTTP POST to ClickHouse JSONEachRow endpoint
+      await fetch('http://clickhouse-server:8123/?query=INSERT INTO logs FORMAT JSONEachRow', {
+        method: 'POST',
+        body: data.map(d => JSON.stringify(d)).join('\n')
+      });
+    } catch (e) {
+      // Ignore clickhouse flush failures in dev/test
+    }
+  }
+}
+
 const logger = winston.createLogger({
   level: config.isProduction ? 'info' : 'debug',
   format: winston.format.combine(
@@ -16,6 +45,7 @@ const logger = winston.createLogger({
             winston.format.simple()
           ),
     }),
+    new ClickHouseTransport(),
   ],
 });
 

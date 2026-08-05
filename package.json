@@ -37,6 +37,8 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
+    "@grpc/grpc-js": "^1.14.4",
+    "@grpc/proto-loader": "^0.8.1",
     "animejs": "^4.5.0",
     "cloudinary": "^2.5.0",
     "compression": "^1.7.4",

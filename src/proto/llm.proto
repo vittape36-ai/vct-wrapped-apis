@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package vct.llm;
+
+service LlmService {
+  rpc Chat (ChatRequest) returns (ChatResponse);
+}
+
+message ChatRequest {
+  string model = 1;
+  string message = 2;
+}
+
+message ChatResponse {
+  string content = 1;
+}

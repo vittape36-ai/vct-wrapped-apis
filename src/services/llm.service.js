@@ -141,3 +141,16 @@ export function listModels() {
     },
   };
 }
+
+/**
+ * Stream Chat completion via OpenAI.
+ */
+export async function streamOpenAI(messages, model) {
+  const client = new OpenAI({ apiKey: openaiVault.next() });
+  return client.chat.completions.create({
+    model: model || DEFAULT_MODELS.openai,
+    messages,
+    stream: true,
+  });
+}
+
