@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-// Mock external dependencies before importing service
 vi.mock('openai', () => ({
   default: class {
     constructor() {
@@ -32,60 +31,29 @@ vi.mock('@google/generative-ai', () => ({
   },
 }));
 
-vi.mock('../src/utils/cache.js', () => ({
-  cache: {
-    get: vi.fn().mockResolvedValue(null),
-    set: vi.fn().mockResolvedValue(true),
-    buildKey: vi.fn((...args) => args.join(':')),
-  },
-}));
-
-vi.mock('../src/config/redis.js', () => ({
-  redis: { status: 'ready' },
-}));
-
 describe('LLM Service', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should export chat function', async () => {
-    const llmService = await import('../src/services/llm.service.js');
-    expect(typeof llmService.chat).toBe('function');
-  });
-
-  it('should export listModels function', async () => {
-    const llmService = await import('../src/services/llm.service.js');
-    expect(typeof llmService.listModels).toBe('function');
+  it('should instantiate VCT class and expose llm service', async () => {
+    const { VCT } = await import('../src/index.js');
+    const vct = new VCT({
+      llm: { openaiKey: 'fake', geminiKey: 'fake' }
+    });
+    expect(typeof vct.llm.chat).toBe('function');
+    expect(typeof vct.llm.listModels).toBe('function');
   });
 
   it('listModels should return provider-grouped models', async () => {
-    const { listModels } = await import('../src/services/llm.service.js');
-    const result = listModels();
+    const { VCT } = await import('../src/index.js');
+    const vct = new VCT({
+      llm: { openaiKey: 'fake', geminiKey: 'fake' }
+    });
+    const result = vct.llm.listModels();
     expect(result).toHaveProperty('openai');
     expect(result).toHaveProperty('gemini');
     expect(Array.isArray(result.openai.models)).toBe(true);
     expect(Array.isArray(result.gemini.models)).toBe(true);
-  });
-});
-
-describe('LLM Route Validation', () => {
-  it('should reject empty prompt', () => {
-    const payload = { prompt: '' };
-    expect(payload.prompt.length).toBe(0);
-  });
-
-  it('should accept valid temperature range', () => {
-    const validTemps = [0, 0.5, 1, 1.5, 2];
-    validTemps.forEach((t) => {
-      expect(t).toBeGreaterThanOrEqual(0);
-      expect(t).toBeLessThanOrEqual(2);
-    });
-  });
-
-  it('should reject invalid provider', () => {
-    const validProviders = ['openai', 'gemini'];
-    expect(validProviders.includes('anthropic')).toBe(false);
-    expect(validProviders.includes('openai')).toBe(true);
   });
 });

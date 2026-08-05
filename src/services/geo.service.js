@@ -1,176 +1,139 @@
-import { config } from '../config/env.js';
 import { retry } from '../utils/retry.js';
-import { cacheGet, cacheSet, cacheKey } from '../utils/cache.js';
-
-
-let accessToken = null;
-let tokenExpiry = 0;
 
 const MMI_BASE = 'https://atlas.mappls.com/api';
 
-/**
- * Get OAuth2 token for MapMyIndia (Mappls) API.
- */
-async function getToken() {
-  const now = Date.now();
-  if (accessToken && now < tokenExpiry) return accessToken;
-
-  if (!config.geo.clientId) {
-    throw Object.assign(new Error('MapMyIndia not configured'), { statusCode: 503 });
+export class GeoService {
+  constructor(config = {}) {
+    this.config = config;
+    this.accessToken = null;
+    this.tokenExpiry = 0;
   }
 
-  const res = await fetch('https://outpost.mappls.com/api/security/oauth/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({
-      grant_type: 'client_credentials',
-      client_id: config.geo.clientId,
-      client_secret: config.geo.clientSecret,
-    }),
-  });
+  async getToken() {
+    const now = Date.now();
+    if (this.accessToken && now < this.tokenExpiry) return this.accessToken;
 
-  if (!res.ok) throw new Error(`MapMyIndia auth failed: ${res.status}`);
-  const data = await res.json();
-  accessToken = data.access_token;
-  tokenExpiry = now + (data.expires_in - 60) * 1000; // refresh 60s early
-  return accessToken;
-}
+    if (!this.config.clientId) {
+      throw new Error('MapMyIndia not configured');
+    }
 
-/**
- * Authenticated fetch helper.
- */
-async function mmiGet(path, params = {}) {
-  const token = await getToken();
-  const url = new URL(`${MMI_BASE}${path}`);
-  Object.entries(params).forEach(([k, v]) => {
-    if (v !== undefined && v !== null) url.searchParams.set(k, v);
-  });
+    const res = await fetch('https://outpost.mappls.com/api/security/oauth/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        grant_type: 'client_credentials',
+        client_id: this.config.clientId,
+        client_secret: this.config.clientSecret,
+      }),
+    });
 
-  const res = await fetch(url.toString(), {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw Object.assign(new Error(`MapMyIndia ${res.status}: ${text}`), { statusCode: res.status });
+    if (!res.ok) throw new Error(`MapMyIndia auth failed: ${res.status}`);
+    const data = await res.json();
+    this.accessToken = data.access_token;
+    this.tokenExpiry = now + (data.expires_in - 60) * 1000;
+    return this.accessToken;
   }
 
-  return res.json();
-}
+  async mmiGet(path, params = {}) {
+    const token = await this.getToken();
+    const url = new URL(`${MMI_BASE}${path}`);
+    Object.entries(params).forEach(([k, v]) => {
+      if (v !== undefined && v !== null) url.searchParams.set(k, v);
+    });
 
-/**
- * Geocode an address to lat/lng.
- * Optimized for Indian addresses.
- */
-export async function geocode(query) {
-  const key = cacheKey('geo:geocode', { query });
-  const cached = await cacheGet(key);
-  if (cached) return { ...cached, cached: true };
+    const res = await fetch(url.toString(), {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-  const data = await retry(
-    () => mmiGet('/places/geocode', { address: query, region: 'IND' }),
-    { retries: 2, label: 'geo:geocode' }
-  );
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`MapMyIndia ${res.status}: ${text}`);
+    }
 
-  const results = (data.copResults || []).map((r) => ({
-    formattedAddress: r.formattedAddress,
-    latitude: r.latitude,
-    longitude: r.longitude,
-    type: r.type,
-    placeId: r.eLoc,
-    district: r.district,
-    city: r.city,
-    state: r.state,
-    pincode: r.pincode,
-  }));
+    return res.json();
+  }
 
-  const result = { query, results, count: results.length };
-  await cacheSet(key, result, config.geo.cacheTtl);
-  return result;
-}
+  async geocode(query) {
+    const data = await retry(
+      () => this.mmiGet('/places/geocode', { address: query, region: 'IND' }),
+      { retries: 2, label: 'geo:geocode' }
+    );
 
-/**
- * Reverse geocode lat/lng to address.
- */
-export async function reverseGeocode(lat, lng) {
-  const key = cacheKey('geo:reverse', { lat, lng });
-  const cached = await cacheGet(key);
-  if (cached) return { ...cached, cached: true };
+    const results = (data.copResults || []).map((r) => ({
+      formattedAddress: r.formattedAddress,
+      latitude: r.latitude,
+      longitude: r.longitude,
+      type: r.type,
+      placeId: r.eLoc,
+      district: r.district,
+      city: r.city,
+      state: r.state,
+      pincode: r.pincode,
+    }));
 
-  const data = await retry(
-    () => mmiGet('/places/geocode', { lat, lng }),
-    { retries: 2, label: 'geo:reverse' }
-  );
+    return { query, results, count: results.length };
+  }
 
-  const result = {
-    latitude: lat,
-    longitude: lng,
-    results: data.results || [],
-  };
+  async reverseGeocode(lat, lng) {
+    const data = await retry(
+      () => this.mmiGet('/places/geocode', { lat, lng }),
+      { retries: 2, label: 'geo:reverse' }
+    );
 
-  await cacheSet(key, result, config.geo.cacheTtl);
-  return result;
-}
+    return {
+      latitude: lat,
+      longitude: lng,
+      results: data.results || [],
+    };
+  }
 
-/**
- * Autocomplete / text search — great for search bars.
- */
-export async function autosuggest(query, { location, zoom, pod } = {}) {
-  const key = cacheKey('geo:suggest', { query, location, zoom });
-  const cached = await cacheGet(key);
-  if (cached) return { ...cached, cached: true };
+  async autosuggest(query, { location, zoom, pod } = {}) {
+    const data = await retry(
+      () =>
+        this.mmiGet('/places/search/json', {
+          query,
+          location,
+          zoom,
+          pod,
+          region: 'IND',
+        }),
+      { retries: 2, label: 'geo:suggest' }
+    );
 
-  const data = await retry(
-    () =>
-      mmiGet('/places/search/json', {
-        query,
-        location,
-        zoom,
-        pod,
-        region: 'IND',
-      }),
-    { retries: 2, label: 'geo:suggest' }
-  );
+    const results = (data.suggestedLocations || []).map((r) => ({
+      placeName: r.placeName,
+      placeAddress: r.placeAddress,
+      latitude: r.latitude,
+      longitude: r.longitude,
+      type: r.type,
+      placeId: r.eLoc,
+      orderIndex: r.orderIndex,
+    }));
 
-  const results = (data.suggestedLocations || []).map((r) => ({
-    placeName: r.placeName,
-    placeAddress: r.placeAddress,
-    latitude: r.latitude,
-    longitude: r.longitude,
-    type: r.type,
-    placeId: r.eLoc,
-    orderIndex: r.orderIndex,
-  }));
+    return { query, results, count: results.length };
+  }
 
-  const result = { query, results, count: results.length };
-  await cacheSet(key, result, config.geo.cacheTtl);
-  return result;
-}
+  async distanceMatrix(origins, destinations, { profile = 'driving' } = {}) {
+    const srcStr = origins.map((o) => `${o.lng},${o.lat}`).join('|');
+    const dstStr = destinations.map((d) => `${d.lng},${d.lat}`).join('|');
 
-/**
- * Distance matrix between origins and destinations.
- */
-export async function distanceMatrix(origins, destinations, { profile = 'driving' } = {}) {
-  // origins/destinations: arrays of {lat, lng}
-  const srcStr = origins.map((o) => `${o.lng},${o.lat}`).join('|');
-  const dstStr = destinations.map((d) => `${d.lng},${d.lat}`).join('|');
+    const data = await retry(
+      () =>
+        this.mmiGet('/places/distance_matrix/json', {
+          sources: srcStr,
+          destinations: dstStr,
+          profile,
+          rtype: 1, // fastest route
+        }),
+      { retries: 2, label: 'geo:distance' }
+    );
 
-  const data = await retry(
-    () =>
-      mmiGet('/places/distance_matrix/json', {
-        sources: srcStr,
-        destinations: dstStr,
-        profile,
-        rtype: 1, // fastest route
-      }),
-    { retries: 2, label: 'geo:distance' }
-  );
-
-  return {
-    origins,
-    destinations,
-    profile,
-    rows: data.results?.distances || [],
-    durations: data.results?.durations || [],
-  };
+    return {
+      origins,
+      destinations,
+      profile,
+      rows: data.results?.distances || [],
+      durations: data.results?.durations || [],
+    };
+  }
 }

@@ -1,5 +1,3 @@
-import { logger } from '../middleware/logger.js';
-
 /**
  * Retry an async function with exponential backoff.
  *
@@ -23,11 +21,11 @@ export async function retry(fn, { retries = 3, baseDelay = 200, maxDelay = 5000,
       if (attempt === retries) break;
 
       const delay = Math.min(baseDelay * 2 ** attempt + Math.random() * 100, maxDelay);
-      logger.warn({
+      console.warn(JSON.stringify({
         message: `Retry ${attempt + 1}/${retries} for ${label}`,
         error: err.message,
         nextRetryMs: Math.round(delay),
-      });
+      }));
 
       await new Promise((r) => setTimeout(r, delay));
     }

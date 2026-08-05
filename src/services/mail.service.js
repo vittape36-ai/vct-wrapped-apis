@@ -1,19 +1,5 @@
 import { Resend } from 'resend';
-import { config } from '../config/env.js';
 import { retry } from '../utils/retry.js';
-import { logger } from '../middleware/logger.js';
-
-let resend = null;
-
-function getResend() {
-  if (!resend && config.mail.resendKey) {
-    resend = new Resend(config.mail.resendKey);
-  }
-  if (!resend) throw Object.assign(new Error('Resend not configured'), { statusCode: 503 });
-  return resend;
-}
-
-// ───────────── Built-in Templates ─────────────
 
 const TEMPLATES = {
   otp: ({ code, appName = 'VCT' }) => ({
@@ -55,80 +41,75 @@ const TEMPLATES = {
   }),
 };
 
-/**
- * Send an email.
- *
- * @param {Object} params
- * @param {string|string[]} params.to      - Recipient(s)
- * @param {string} params.subject          - Subject line (ignored if template used)
- * @param {string} params.html             - HTML body (ignored if template used)
- * @param {string} params.text             - Plain text fallback
- * @param {string} params.from             - Override sender
- * @param {string} params.replyTo          - Reply-to address
- * @param {string} params.template         - Template name ("otp", "welcome", "alert")
- * @param {Object} params.data             - Template variables
- */
-export async function send({ to, subject, html, text, from, replyTo, template, data = {} }) {
-  const client = getResend();
-
-  // Resolve template
-  let resolvedSubject = subject;
-  let resolvedHtml = html;
-
-  if (template) {
-    const tmplFn = TEMPLATES[template];
-    if (!tmplFn) {
-      throw Object.assign(new Error(`Unknown template: "${template}". Available: ${Object.keys(TEMPLATES).join(', ')}`), { statusCode: 400 });
+export class MailService {
+  constructor(config = {}) {
+    this.config = config;
+    this.resend = null;
+    if (config.resendKey) {
+      this.resend = new Resend(config.resendKey);
     }
-    const rendered = tmplFn(data);
-    resolvedSubject = resolvedSubject || rendered.subject;
-    resolvedHtml = resolvedHtml || rendered.html;
   }
 
-  if (!resolvedSubject || !resolvedHtml) {
-    throw Object.assign(new Error('Either provide subject+html or a valid template'), { statusCode: 400 });
+  getResend() {
+    if (!this.resend) throw new Error('Resend not configured');
+    return this.resend;
   }
 
-  const result = await retry(
-    () =>
-      client.emails.send({
-        from: from || `${config.mail.fromName} <${config.mail.fromDefault}>`,
-        to: Array.isArray(to) ? to : [to],
-        subject: resolvedSubject,
-        html: resolvedHtml,
-        text,
-        reply_to: replyTo,
-      }),
-    { retries: 2, label: 'mail:send' }
-  );
+  async send({ to, subject, html, text, from, replyTo, template, data = {} }) {
+    const client = this.getResend();
 
-  logger.info({ message: 'Email sent', to, subject: resolvedSubject, id: result.data?.id });
-  return { id: result.data?.id, to, subject: resolvedSubject };
-}
+    let resolvedSubject = subject;
+    let resolvedHtml = html;
 
-/**
- * Send batch emails (up to 100).
- */
-export async function sendBatch(emails) {
-  if (!Array.isArray(emails) || emails.length === 0) {
-    throw Object.assign(new Error('Provide an array of emails'), { statusCode: 400 });
+    if (template) {
+      const tmplFn = TEMPLATES[template];
+      if (!tmplFn) {
+        throw new Error(`Unknown template: "${template}". Available: ${Object.keys(TEMPLATES).join(', ')}`);
+      }
+      const rendered = tmplFn(data);
+      resolvedSubject = resolvedSubject || rendered.subject;
+      resolvedHtml = resolvedHtml || rendered.html;
+    }
+
+    if (!resolvedSubject || !resolvedHtml) {
+      throw new Error('Either provide subject+html or a valid template');
+    }
+
+    const result = await retry(
+      () =>
+        client.emails.send({
+          from: from || `${this.config.fromName} <${this.config.fromDefault}>`,
+          to: Array.isArray(to) ? to : [to],
+          subject: resolvedSubject,
+          html: resolvedHtml,
+          text,
+          reply_to: replyTo,
+        }),
+      { retries: 2, label: 'mail:send' }
+    );
+
+    console.log(JSON.stringify({ message: 'Email sent', to, subject: resolvedSubject, id: result.data?.id }));
+    return { id: result.data?.id, to, subject: resolvedSubject };
   }
-  if (emails.length > 100) {
-    throw Object.assign(new Error('Batch limit is 100 emails'), { statusCode: 400 });
+
+  async sendBatch(emails) {
+    if (!Array.isArray(emails) || emails.length === 0) {
+      throw new Error('Provide an array of emails');
+    }
+    if (emails.length > 100) {
+      throw new Error('Batch limit is 100 emails');
+    }
+
+    const results = await Promise.allSettled(emails.map((e) => this.send(e)));
+
+    return results.map((r, i) => ({
+      index: i,
+      status: r.status,
+      ...(r.status === 'fulfilled' ? r.value : { error: r.reason?.message }),
+    }));
   }
 
-  const results = await Promise.allSettled(emails.map((e) => send(e)));
-
-  return results.map((r, i) => ({
-    index: i,
-    status: r.status,
-    ...(r.status === 'fulfilled' ? r.value : { error: r.reason?.message }),
-  }));
-}
-
-/**
- * List available templates.
- */
-export function listTemplates() {
-  return Object.keys(TEMPLATES);
+  listTemplates() {
+    return Object.keys(TEMPLATES);
+  }
 }
