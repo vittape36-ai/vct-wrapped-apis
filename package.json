@@ -1,9 +1,12 @@
 {
   "name": "vct-api-plus",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Production-ready API wrappers by Vidya Coddle Tech — LLM, Payments, Firebase, CDN, Mail, Geo. One SDK, six services, ship Day 1.",
   "main": "src/index.js",
   "type": "module",
+  "files": [
+    "src"
+  ],
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",

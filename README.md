@@ -35,7 +35,7 @@ Every wrapper gives you:
 ### 1. Install
 
 ```bash
-npm install @vct/api-plus
+npm install vct-api-plus
 ```
 
 ### 2. Usage
@@ -43,7 +43,7 @@ npm install @vct/api-plus
 Import the `VCT` class and initialize it with your raw vendor keys.
 
 ```javascript
-import { VCT } from '@vct/api-plus';
+import { VCT } from 'vct-api-plus';
 
 const vct = new VCT({
   llm: {
