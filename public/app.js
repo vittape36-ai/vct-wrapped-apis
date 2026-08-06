@@ -132,29 +132,31 @@ Try typing "failsafe", "rotate", or "caching" to see specific details.`
   lucide.createIcons();
 
   // --- Smooth Scroll using Lenis ---
-  const lenis = new Lenis({
-    duration: 1.2,
-    easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    smoothWheel: true
-  });
-
-  function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
-  requestAnimationFrame(raf);
-
-  // Link scroll navigation clicks to Lenis
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-      e.preventDefault();
-      const targetId = this.getAttribute('href');
-      const target = document.querySelector(targetId);
-      if (target) {
-        lenis.scrollTo(target);
-      }
+  if (typeof Lenis !== 'undefined') {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true
     });
-  });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Link scroll navigation clicks to Lenis
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const target = document.querySelector(targetId);
+        if (target) {
+          lenis.scrollTo(target);
+        }
+      });
+    });
+  }
 
   // --- Custom Fluid Cursor with Velocity Stretching ---
   const cursor = document.getElementById('custom-cursor');
@@ -713,79 +715,81 @@ console.log('${activeService.toUpperCase()} response success:', response.ok);`;
   });
 
   // --- GSAP Scroll Trigger Animations ---
-  gsap.registerPlugin(ScrollTrigger);
+  if (typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
 
-  // Reveal elements with perspective rotation & slide
-  const revealElements = document.querySelectorAll('.reveal-elem');
-  revealElements.forEach(elem => {
-    const customSpeed = parseFloat(elem.getAttribute('data-speed')) || 1.0;
-    
-    gsap.fromTo(elem, {
-      opacity: 0,
-      y: 50 * customSpeed,
-      rotationX: -10,
-      transformPerspective: 1200
-    }, {
-      opacity: 1,
-      y: 0,
-      rotationX: 0,
-      duration: 1.2,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: elem,
-        start: 'top 90%',
-        toggleActions: 'play none none none'
-      }
-    });
-  });
-
-  // --- SVG Data Flow Pipeline Animation (Section 3) ---
-  const flowSection = document.querySelector('.section-data-flow');
-  const flowActivePath = document.getElementById('flow-line-active');
-  const flowDot = document.getElementById('data-packet-dot');
-
-  if (flowSection && flowActivePath) {
-    gsap.to(flowActivePath, {
-      strokeDashoffset: 0,
-      scrollTrigger: {
-        trigger: flowSection,
-        start: 'top 35%',
-        end: 'bottom 65%',
-        scrub: 1
-      }
+    // Reveal elements with perspective rotation & slide
+    const revealElements = document.querySelectorAll('.reveal-elem');
+    revealElements.forEach(elem => {
+      const customSpeed = parseFloat(elem.getAttribute('data-speed')) || 1.0;
+      
+      gsap.fromTo(elem, {
+        opacity: 0,
+        y: 50 * customSpeed,
+        rotationX: -10,
+        transformPerspective: 1200
+      }, {
+        opacity: 1,
+        y: 0,
+        rotationX: 0,
+        duration: 1.2,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: elem,
+          start: 'top 90%',
+          toggleActions: 'play none none none'
+        }
+      });
     });
 
-    gsap.fromTo(flowDot, {
-      top: '0%',
-      opacity: 0
-    }, {
-      top: '100%',
-      opacity: 1,
-      scrollTrigger: {
-        trigger: flowSection,
-        start: 'top 35%',
-        end: 'bottom 65%',
-        scrub: 0.5,
-        onEnter: () => { flowDot.style.opacity = 1; },
-        onLeave: () => { flowDot.style.opacity = 0; },
-        onEnterBack: () => { flowDot.style.opacity = 1; },
-        onLeaveBack: () => { flowDot.style.opacity = 0; }
-      }
-    });
+    // --- SVG Data Flow Pipeline Animation (Section 3) ---
+    const flowSection = document.querySelector('.section-data-flow');
+    const flowActivePath = document.getElementById('flow-line-active');
+    const flowDot = document.getElementById('data-packet-dot');
 
-    const steps = ['#step-node-1', '#step-node-2', '#step-node-3', '#step-node-4'];
-    steps.forEach(nodeId => {
-      const stepNode = document.querySelector(nodeId);
-      if (stepNode) {
-        ScrollTrigger.create({
-          trigger: stepNode,
-          start: 'top 55%',
-          end: 'bottom 45%',
-          onEnter: () => stepNode.classList.add('active'),
-          onLeaveBack: () => stepNode.classList.remove('active')
-        });
-      }
-    });
+    if (flowSection && flowActivePath) {
+      gsap.to(flowActivePath, {
+        strokeDashoffset: 0,
+        scrollTrigger: {
+          trigger: flowSection,
+          start: 'top 35%',
+          end: 'bottom 65%',
+          scrub: 1
+        }
+      });
+
+      gsap.fromTo(flowDot, {
+        top: '0%',
+        opacity: 0
+      }, {
+        top: '100%',
+        opacity: 1,
+        scrollTrigger: {
+          trigger: flowSection,
+          start: 'top 35%',
+          end: 'bottom 65%',
+          scrub: 0.5,
+          onEnter: () => { flowDot.style.opacity = 1; },
+          onLeave: () => { flowDot.style.opacity = 0; },
+          onEnterBack: () => { flowDot.style.opacity = 1; },
+          onLeaveBack: () => { flowDot.style.opacity = 0; }
+        }
+      });
+
+      const steps = ['#step-node-1', '#step-node-2', '#step-node-3', '#step-node-4'];
+      steps.forEach(nodeId => {
+        const stepNode = document.querySelector(nodeId);
+        if (stepNode) {
+          ScrollTrigger.create({
+            trigger: stepNode,
+            start: 'top 55%',
+            end: 'bottom 45%',
+            onEnter: () => stepNode.classList.add('active'),
+            onLeaveBack: () => stepNode.classList.remove('active')
+          });
+        }
+      });
+    }
   }
 
   // --- Terminal Auto-Typing Simulation (Section 4) ---
@@ -1029,5 +1033,392 @@ if (terminalSection && typedCodeTarget) {
     button.classList.add('ripple-btn');
     button.addEventListener('mousedown', createButtonRipple);
   });
+
+  // ==========================================
+  // --- Developer Console / Dashboard Logic ---
+  // ==========================================
+
+  // Tab switching logic
+  const sidebarItems = document.querySelectorAll('.sidebar-item');
+  const panels = document.querySelectorAll('.dashboard-tab-panel');
+
+  if (sidebarItems.length && panels.length) {
+    sidebarItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const targetTab = item.getAttribute('data-tab');
+        if (!targetTab) return;
+
+        // Remove active class from all sidebar items and panels
+        sidebarItems.forEach(i => i.classList.remove('active'));
+        panels.forEach(p => p.classList.remove('active'));
+
+        // Add active class to clicked sidebar item and target panel
+        item.classList.add('active');
+        const targetPanel = document.getElementById(`panel-${targetTab}`);
+        if (targetPanel) {
+          targetPanel.classList.add('active');
+        }
+      });
+    });
+  }
+
+  // Uptime and Health updates
+  const healthVal = document.getElementById('val-health');
+  const uptimeVal = document.getElementById('val-dashboard-uptime');
+  const globalHealthPill = document.getElementById('val-health-status');
+  const globalUptimeCounter = document.getElementById('global-uptime-counter');
+
+  async function updateHealthMetrics() {
+    try {
+      const res = await fetch('/health');
+      if (res.ok) {
+        const body = await res.json();
+        const { status, uptime } = body.data;
+
+        if (healthVal) {
+          healthVal.textContent = status === 'healthy' ? 'Online' : 'Degraded';
+          healthVal.style.color = status === 'healthy' ? 'var(--success)' : 'var(--warning)';
+        }
+
+        if (globalHealthPill) {
+          globalHealthPill.textContent = status === 'healthy' ? 'Online' : 'Degraded';
+        }
+
+        if (uptimeVal) {
+          const h = Math.floor(uptime / 3600);
+          const m = Math.floor((uptime % 3600) / 60);
+          const s = Math.floor(uptime % 60);
+          let uptimeStr = '';
+          if (h > 0) uptimeStr += `${h}h `;
+          if (m > 0 || h > 0) uptimeStr += `${m}m `;
+          uptimeStr += `${s}s`;
+          uptimeVal.textContent = uptimeStr;
+        }
+
+        if (globalUptimeCounter) {
+          const h = Math.floor(uptime / 3600);
+          const m = Math.floor((uptime % 3600) / 60);
+          const s = Math.floor(uptime % 60);
+          let uptimeStr = '';
+          if (h > 0) uptimeStr += `${h}h `;
+          if (m > 0 || h > 0) uptimeStr += `${m}m `;
+          uptimeStr += `${s}s`;
+          globalUptimeCounter.textContent = `Uptime: ${uptimeStr}`;
+        }
+      }
+    } catch (err) {
+      if (healthVal) {
+        healthVal.textContent = 'Offline';
+        healthVal.style.color = 'var(--error)';
+      }
+      if (globalHealthPill) {
+        globalHealthPill.textContent = 'Offline';
+      }
+    }
+  }
+
+  if (healthVal || uptimeVal || globalHealthPill) {
+    updateHealthMetrics();
+    setInterval(updateHealthMetrics, 5000);
+  }
+
+  // Active Wrappers list rendering
+  const servicesListContainer = document.getElementById('dashboard-services-list');
+
+  async function loadWrappersCatalog() {
+    if (!servicesListContainer) return;
+    try {
+      const res = await fetch('/wrappers');
+      if (res.ok) {
+        const body = await res.json();
+        const wrappers = body.data.wrappers;
+
+        servicesListContainer.innerHTML = '';
+        wrappers.forEach(w => {
+          const wrapperItem = document.createElement('div');
+          wrapperItem.className = 'service-item clickable';
+          wrapperItem.style.display = 'flex';
+          wrapperItem.style.justifyContent = 'space-between';
+          wrapperItem.style.alignItems = 'center';
+          wrapperItem.style.padding = '10px 12px';
+          wrapperItem.style.marginBottom = '8px';
+          wrapperItem.style.borderRadius = '6px';
+          wrapperItem.style.background = 'rgba(255, 255, 255, 0.03)';
+          wrapperItem.style.border = '1px solid rgba(255, 255, 255, 0.05)';
+
+          wrapperItem.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="status-dot" style="background: var(--success); width: 6px; height: 6px; border-radius: 50%;"></span>
+              <span style="font-weight: 500; font-size: 13px;">${w.name} Wrapper</span>
+            </div>
+            <span style="font-size: 11px; color: var(--text-secondary); font-family: monospace;">${w.prefix}</span>
+          `;
+
+          wrapperItem.addEventListener('click', () => {
+            const selectPlayground = document.getElementById('select-playground-service');
+            if (selectPlayground) {
+              selectPlayground.value = w.prefix.replace('/', '');
+              selectPlayground.dispatchEvent(new Event('change'));
+              const playgroundMenu = document.getElementById('menu-playground');
+              if (playgroundMenu) playgroundMenu.click();
+            }
+          });
+
+          servicesListContainer.appendChild(wrapperItem);
+        });
+      }
+    } catch (err) {
+      servicesListContainer.innerHTML = `<div style="color: var(--error); font-size: 13px;">Failed to load catalog.</div>`;
+    }
+  }
+
+  if (servicesListContainer) {
+    loadWrappersCatalog();
+  }
+
+  // Sandbox Playground interaction
+  const selectPlayground = document.getElementById('select-playground-service');
+  const sandboxEndpoint = document.getElementById('sandbox-endpoint');
+  const methodBadge = document.getElementById('console-method-badge');
+  const payloadInput = document.getElementById('sandbox-request-payload');
+  const btnExecute = document.getElementById('btn-execute-sandbox');
+  const sandboxStatus = document.getElementById('val-sandbox-status');
+  const terminalScreen = document.getElementById('sandbox-terminal-screen');
+  const btnToggleKey = document.getElementById('btn-toggle-sandbox-key');
+  const apiKeyInput = document.getElementById('sandbox-api-key');
+
+  const defaultPayloadTemplates = {
+    llm: `{\n  "messages": [\n    { "role": "user", "content": "Ping VCT API+ Gateway" }\n  ]\n}`,
+    pay: `{\n  "amount": 7500,\n  "currency": "INR"\n}`,
+    fb: `{\n  "idToken": "mock_id_token_vct_12345"\n}`,
+    cdn: `{\n  "public_id": "profile_image_user_99"\n}`,
+    mail: `{\n  "to": "customer@company.com",\n  "subject": "Resilient SMTP Verification",\n  "body": "Your Resilient Gateway SMTP verification token is: 981248"\n}`,
+    geo: `` 
+  };
+
+  const serviceEndpoints = {
+    llm: { path: '/llm/v1/chat', method: 'POST' },
+    pay: { path: '/pay/v1/order', method: 'POST' },
+    fb: { path: '/fb/v1/auth/verify', method: 'POST' },
+    cdn: { path: '/cdn/v1/url/sign', method: 'POST' },
+    mail: { path: '/mail/v1/send', method: 'POST' },
+    geo: { path: '/geo/v1/geocode', method: 'GET' }
+  };
+
+  if (selectPlayground && sandboxEndpoint && methodBadge && payloadInput) {
+    payloadInput.value = defaultPayloadTemplates[selectPlayground.value];
+
+    selectPlayground.addEventListener('change', () => {
+      const selected = selectPlayground.value;
+      const endpointInfo = serviceEndpoints[selected];
+      if (endpointInfo) {
+        sandboxEndpoint.value = endpointInfo.path;
+        methodBadge.textContent = endpointInfo.method;
+        payloadInput.value = defaultPayloadTemplates[selected];
+      }
+    });
+
+    if (btnToggleKey && apiKeyInput) {
+      btnToggleKey.addEventListener('click', () => {
+        const type = apiKeyInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        apiKeyInput.setAttribute('type', type);
+        const icon = btnToggleKey.querySelector('i');
+        if (icon) {
+          icon.setAttribute('data-lucide', type === 'password' ? 'eye' : 'eye-off');
+          lucide.createIcons();
+        }
+      });
+    }
+
+    if (btnExecute && sandboxStatus && terminalScreen) {
+      btnExecute.addEventListener('click', async () => {
+        const selected = selectPlayground.value;
+        const endpointInfo = serviceEndpoints[selected];
+        if (!endpointInfo) return;
+
+        sandboxStatus.textContent = 'running';
+        sandboxStatus.className = 'status-pill status-warn';
+        terminalScreen.textContent = `Sending ${endpointInfo.method} request to ${endpointInfo.path}...`;
+
+        const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+        const headers = {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey
+        };
+
+        const fetchOptions = {
+          method: endpointInfo.method,
+          headers: headers
+        };
+
+        if (endpointInfo.method === 'POST') {
+          try {
+            const val = payloadInput.value.trim();
+            if (val) {
+              JSON.parse(val);
+              fetchOptions.body = val;
+            }
+          } catch (e) {
+            sandboxStatus.textContent = 'error';
+            sandboxStatus.className = 'status-pill status-error';
+            terminalScreen.textContent = `JSON Parsing Error: Invalid request body payload syntax.`;
+            return;
+          }
+        }
+
+        try {
+          const startTime = performance.now();
+          const response = await fetch(endpointInfo.path, fetchOptions);
+          const endTime = performance.now();
+          const latency = Math.round(endTime - startTime);
+
+          const responseText = await response.text();
+          let parsedResponse;
+          try {
+            parsedResponse = JSON.parse(responseText);
+          } catch (e) {
+            parsedResponse = responseText;
+          }
+
+          sandboxStatus.textContent = response.ok ? '200 OK' : `${response.status} Error`;
+          sandboxStatus.className = response.ok ? 'status-pill status-active' : 'status-pill status-error';
+
+          const formattedOutput = {
+            status: response.status,
+            latencyMs: `${latency}ms`,
+            headers: {
+              'content-type': response.headers.get('content-type'),
+              'x-vct-resilience-cache': response.headers.get('x-vct-resilience-cache') || 'miss'
+            },
+            body: parsedResponse
+          };
+
+          terminalScreen.textContent = JSON.stringify(formattedOutput, null, 2);
+        } catch (error) {
+          sandboxStatus.textContent = 'failed';
+          sandboxStatus.className = 'status-pill status-error';
+          terminalScreen.textContent = `Network Request Failed: ${error.message}`;
+        }
+      });
+    }
+  }
+
+  // Provider Credential Pools Mock Cards rendering
+  const keysPoolContainer = document.getElementById('dashboard-keys-pool');
+  if (keysPoolContainer) {
+    const mockKeys = [
+      { provider: 'OpenAI API Pool', key: '••••••••••••••••sk-proj-7a', type: 'Primary LLM', status: 'Active', latency: '142ms', usage: '4.2k reqs' },
+      { provider: 'Gemini Failsafe Pool', key: '••••••••••••••••AIzaSy-9b', type: 'Standby LLM', status: 'Standby', latency: '150ms', usage: '182 reqs' },
+      { provider: 'RazorpayX Vendor Split', key: '••••••••••••••••rzp_live_2c', type: 'Payments', status: 'Active', latency: '85ms', usage: '942 reqs' },
+      { provider: 'Firebase Guard Auth', key: '••••••••••••••••AIzaSy-ff', type: 'Authentication', status: 'Active', latency: '22ms', usage: '12.8k reqs' },
+      { provider: 'Resend SMTP Dispatcher', key: '••••••••••••••••re_8a9B', type: 'Mailer', status: 'Active', latency: '40ms', usage: '612 reqs' },
+      { provider: 'MapMyIndia Optimize', key: '••••••••••••••••mmi_7c6f', type: 'Geocoding', status: 'Cooldown (45s)', latency: 'timeout', usage: '2.4k reqs' }
+    ];
+
+    keysPoolContainer.innerHTML = '';
+    mockKeys.forEach(k => {
+      const keyCard = document.createElement('div');
+      keyCard.className = 'key-card liquid-glass';
+      keyCard.style.padding = '14px';
+      keyCard.style.borderRadius = '8px';
+      keyCard.style.background = 'rgba(255, 255, 255, 0.02)';
+      keyCard.style.border = '1px solid rgba(255, 255, 255, 0.05)';
+      keyCard.style.display = 'flex';
+      keyCard.style.flexDirection = 'column';
+      keyCard.style.gap = '8px';
+
+      const isCooldown = k.status.includes('Cooldown');
+      const isStandby = k.status === 'Standby';
+      let statusClass = 'status-active';
+      if (isCooldown) statusClass = 'status-warn';
+      if (isStandby) statusClass = 'status-none';
+
+      keyCard.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 600; font-size: 13px;">${k.provider}</span>
+          <span class="status-pill ${statusClass}" style="font-size: 10px; padding: 2px 6px;">${k.status}</span>
+        </div>
+        <div style="font-family: monospace; font-size: 12px; color: var(--text-secondary); background: rgba(0,0,0,0.15); padding: 4px 8px; border-radius: 4px;">
+          ${k.key}
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-secondary);">
+          <span>${k.type}</span>
+          <span>${k.usage} • ${k.latency}</span>
+        </div>
+      `;
+      keysPoolContainer.appendChild(keyCard);
+    });
+  }
+
+  // Streaming Telemetry Logs Panel
+  const logsScreen = document.getElementById('dashboard-logs-screen');
+  const btnPauseLogs = document.getElementById('btn-dashboard-pause-logs');
+  const btnClearLogs = document.getElementById('btn-dashboard-clear-logs');
+
+  if (logsScreen) {
+    let logsPaused = false;
+
+    const mockLogTemplates = [
+      () => `[INFO] GET /geo/v1/geocode - Cache HIT (2ms)`,
+      () => `[INFO] POST /llm/v1/chat - Cache MISS, routing to OpenAI (142ms)`,
+      () => `[WARN] POST /llm/v1/chat - OpenAI returned 429, rotating key...`,
+      () => `[INFO] POST /llm/v1/chat - Key rotation successful, Gemini fallback active (150ms)`,
+      () => `[INFO] POST /pay/v1/order - Splitting payments to vendor vnd_012 and vnd_089`,
+      () => `[INFO] POST /fb/v1/auth/verify - Injected Memora auth session context`,
+      () => `[INFO] GET /health - Resilient gateway health status: HEALTHY`,
+      () => `[INFO] POST /cdn/v1/url/sign - Signed Cloudinary upload link generated (8ms)`,
+      () => `[INFO] POST /mail/v1/send - SMTP gateway accepted transactional payload (12ms)`
+    ];
+
+    function appendLogLine() {
+      if (logsPaused) return;
+
+      const time = new Date().toLocaleTimeString();
+      const templateFunc = mockLogTemplates[Math.floor(Math.random() * mockLogTemplates.length)];
+      const text = templateFunc();
+
+      const logLine = document.createElement('div');
+      logLine.style.fontFamily = 'monospace';
+      logLine.style.fontSize = '12px';
+      logLine.style.lineHeight = '1.6';
+      logLine.style.borderBottom = '1px solid rgba(255,255,255,0.02)';
+      logLine.style.padding = '4px 0';
+
+      let textColor = 'var(--text-primary)';
+      if (text.includes('[WARN]')) {
+        textColor = 'var(--warning)';
+      } else if (text.includes('Cache HIT')) {
+        textColor = 'var(--success)';
+      }
+
+      logLine.innerHTML = `<span style="color: var(--text-secondary); margin-right: 8px;">[${time}]</span><span style="color: ${textColor};">${text}</span>`;
+      logsScreen.appendChild(logLine);
+
+      logsScreen.scrollTop = logsScreen.scrollHeight;
+
+      while (logsScreen.children.length > 50) {
+        logsScreen.removeChild(logsScreen.firstChild);
+      }
+    }
+
+    for (let i = 0; i < 5; i++) {
+      appendLogLine();
+    }
+
+    const logInterval = setInterval(appendLogLine, 3000);
+
+    if (btnPauseLogs) {
+      btnPauseLogs.addEventListener('click', () => {
+        logsPaused = !logsPaused;
+        btnPauseLogs.textContent = logsPaused ? 'Resume Stream' : 'Pause Stream';
+      });
+    }
+
+    if (btnClearLogs) {
+      btnClearLogs.addEventListener('click', () => {
+        logsScreen.innerHTML = '';
+      });
+    }
+  }
 
 })();

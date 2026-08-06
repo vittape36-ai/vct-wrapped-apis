@@ -1,13 +1,12 @@
 {
-  "name": "vct-api-plus",
-  "version": "0.1.1",
+  "name": "vct-wrapped-apis",
+  "version": "0.1.0",
   "description": "Production-ready API wrappers by Vidya Coddle Tech — LLM, Payments, Firebase, CDN, Mail, Geo. One SDK, six services, ship Day 1.",
-  "main": "src/index.js",
+  "main": "src/server.js",
   "type": "module",
-  "files": [
-    "src"
-  ],
   "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -27,11 +26,11 @@
     "vct",
     "vidya-coddle-tech"
   ],
-  "author": "Satyam <raosatyam152@gmail.com>",
+  "author": "Vidya Coddle Tech <dev@vidyacoddle.tech>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vidyacoddle/vct-wrapped-apis.git"
+    "url": "https://github.com/ManasTripathi07/vct-wrapped-apis.git"
   },
   "engines": {
     "node": ">=20.0.0"
@@ -42,11 +41,22 @@
     "@grpc/proto-loader": "^0.8.1",
     "animejs": "^4.5.0",
     "cloudinary": "^2.5.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-rate-limit": "^7.4.0",
     "firebase-admin": "^12.6.0",
+    "helmet": "^7.1.0",
+    "ioredis": "^5.4.1",
+    "joi": "^17.13.0",
     "openai": "^4.67.0",
+    "rate-limit-redis": "^4.2.0",
     "razorpay": "^2.9.4",
     "resend": "^4.0.0",
-    "tailwind-merge": "^3.6.0"
+    "tailwind-merge": "^3.6.0",
+    "uuid": "^10.0.0",
+    "winston": "^3.14.0"
   },
   "devDependencies": {
     "eslint": "^9.12.0",

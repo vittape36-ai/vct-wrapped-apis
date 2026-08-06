@@ -1,92 +1,107 @@
 import { v2 as cloudinary } from 'cloudinary';
+import { config } from '../config/env.js';
 
-export class CdnService {
-  constructor(config = {}) {
-    this.config = config;
-    this.configured = false;
+let configured = false;
 
-    if (config.cloudName) {
-      cloudinary.config({
-        cloud_name: config.cloudName,
-        api_key: config.apiKey,
-        api_secret: config.apiSecret,
-        secure: true,
-      });
-      this.configured = true;
-    }
-  }
-
-  ensureConfig() {
-    if (!this.configured) throw new Error('Cloudinary not configured');
-  }
-
-  getSignedUpload({ folder = 'vct', tags = [], maxBytes = 10_485_760 } = {}) {
-    this.ensureConfig();
-
-    const timestamp = Math.round(Date.now() / 1000);
-    const params = {
-      timestamp,
-      upload_preset: this.config.uploadPreset,
-      folder,
-      tags: tags.join(','),
-      max_bytes: maxBytes,
-    };
-
-    const signature = cloudinary.utils.api_sign_request(params, this.config.apiSecret);
-
-    return {
-      uploadUrl: `https://api.cloudinary.com/v1_1/${this.config.cloudName}/auto/upload`,
-      params: { ...params, signature, api_key: this.config.apiKey },
-    };
-  }
-
-  getSignedUrl(publicId, transforms = {}, ttlSeconds) {
-    this.ensureConfig();
-    const _ttl = ttlSeconds || this.config.signedUrlTtl;
-
-    const transformation = [];
-    if (transforms.width) transformation.push({ width: transforms.width });
-    if (transforms.height) transformation.push({ height: transforms.height });
-    if (transforms.crop) transformation.push({ crop: transforms.crop });
-    if (transforms.quality) transformation.push({ quality: transforms.quality });
-    if (transforms.format) transformation.push({ fetch_format: transforms.format });
-
-    return cloudinary.url(publicId, {
-      sign_url: true,
-      type: 'authenticated',
-      transformation: transformation.length > 0 ? transformation : undefined,
+function ensureConfig() {
+  if (!configured && config.cdn.cloudName) {
+    cloudinary.config({
+      cloud_name: config.cdn.cloudName,
+      api_key: config.cdn.apiKey,
+      api_secret: config.cdn.apiSecret,
       secure: true,
     });
+    configured = true;
   }
+  if (!configured) throw Object.assign(new Error('Cloudinary not configured'), { statusCode: 503 });
+}
 
-  transform(publicId, transforms) {
-    this.ensureConfig();
+/**
+ * Generate a signed upload URL + params for client-side direct upload.
+ */
+export function getSignedUpload({ folder = 'vct', tags = [], maxBytes = 10_485_760 } = {}) {
+  ensureConfig();
 
-    const parts = [];
-    if (transforms.width) parts.push(`w_${transforms.width}`);
-    if (transforms.height) parts.push(`h_${transforms.height}`);
-    if (transforms.crop) parts.push(`c_${transforms.crop}`);
-    if (transforms.quality) parts.push(`q_${transforms.quality}`);
-    if (transforms.format) parts.push(`f_${transforms.format}`);
-    if (transforms.blur) parts.push(`e_blur:${transforms.blur}`);
-    if (transforms.grayscale) parts.push('e_grayscale');
+  const timestamp = Math.round(Date.now() / 1000);
+  const params = {
+    timestamp,
+    upload_preset: config.cdn.uploadPreset,
+    folder,
+    tags: tags.join(','),
+    max_bytes: maxBytes,
+  };
 
-    const transformStr = parts.join(',');
+  // Sign the params
+  const signature = cloudinary.utils.api_sign_request(params, config.cdn.apiSecret);
 
-    return {
-      url: `https://res.cloudinary.com/${this.config.cloudName}/image/upload/${transformStr}/${publicId}`,
-      transform: transformStr,
-      publicId,
-    };
-  }
+  return {
+    uploadUrl: `https://api.cloudinary.com/v1_1/${config.cdn.cloudName}/auto/upload`,
+    params: { ...params, signature, api_key: config.cdn.apiKey },
+  };
+}
 
-  async deleteAsset(publicId) {
-    this.ensureConfig();
-    return cloudinary.uploader.destroy(publicId);
-  }
+/**
+ * Generate a signed delivery URL with transforms.
+ *
+ * @param {string} publicId
+ * @param {Object} transforms - { width, height, crop, quality, format, ... }
+ * @param {number} ttlSeconds - URL expiry (default from config)
+ */
+export function getSignedUrl(publicId, transforms = {}, ttlSeconds) {
+  ensureConfig();
+  const _ttl = ttlSeconds || config.cdn.signedUrlTtl;
 
-  async getAsset(publicId) {
-    this.ensureConfig();
-    return cloudinary.api.resource(publicId);
-  }
+  const transformation = [];
+  if (transforms.width) transformation.push({ width: transforms.width });
+  if (transforms.height) transformation.push({ height: transforms.height });
+  if (transforms.crop) transformation.push({ crop: transforms.crop });
+  if (transforms.quality) transformation.push({ quality: transforms.quality });
+  if (transforms.format) transformation.push({ fetch_format: transforms.format });
+
+  return cloudinary.url(publicId, {
+    sign_url: true,
+    type: 'authenticated',
+    transformation: transformation.length > 0 ? transformation : undefined,
+    secure: true,
+  });
+}
+
+/**
+ * Transform an existing image on the fly.
+ */
+export function transform(publicId, transforms) {
+  ensureConfig();
+
+  const parts = [];
+  if (transforms.width) parts.push(`w_${transforms.width}`);
+  if (transforms.height) parts.push(`h_${transforms.height}`);
+  if (transforms.crop) parts.push(`c_${transforms.crop}`);
+  if (transforms.quality) parts.push(`q_${transforms.quality}`);
+  if (transforms.format) parts.push(`f_${transforms.format}`);
+  if (transforms.blur) parts.push(`e_blur:${transforms.blur}`);
+  if (transforms.grayscale) parts.push('e_grayscale');
+
+  const transformStr = parts.join(',');
+
+  return {
+    url: `https://res.cloudinary.com/${config.cdn.cloudName}/image/upload/${transformStr}/${publicId}`,
+    transform: transformStr,
+    publicId,
+  };
+}
+
+/**
+ * Delete an asset.
+ */
+export async function deleteAsset(publicId) {
+  ensureConfig();
+  return cloudinary.uploader.destroy(publicId);
+}
+
+/**
+ * Get asset details.
+ */
+export async function getAsset(publicId) {
+  ensureConfig();
+  return cloudinary.api.resource(publicId);
 }
