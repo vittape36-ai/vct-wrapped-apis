@@ -1407,3 +1407,51 @@ if (terminalSection && typedCodeTarget) {
   }
 
 })();
+
+// --- Theme Toggle Logic ---
+(function() {
+  const THEME_KEY = 'vct_theme_preference';
+  const savedTheme = localStorage.getItem(THEME_KEY);
+  const isLight = savedTheme === 'light';
+  
+  if (isLight) {
+    document.body.classList.add('light-theme');
+  }
+
+  function updateIcons(isLight) {
+    const mainIcon = document.getElementById('theme-icon');
+    if (mainIcon) {
+      if (typeof lucide !== 'undefined') {
+        mainIcon.setAttribute('data-lucide', isLight ? 'sun' : 'moon');
+        lucide.createIcons();
+      }
+    }
+    const dashIcon = document.getElementById('dashboard-theme-icon');
+    if (dashIcon) {
+      if (typeof lucide !== 'undefined') {
+        dashIcon.setAttribute('data-lucide', isLight ? 'sun' : 'moon');
+        lucide.createIcons();
+      }
+    }
+  }
+
+  function toggleTheme() {
+    const isNowLight = document.body.classList.toggle('light-theme');
+    localStorage.setItem(THEME_KEY, isNowLight ? 'light' : 'dark');
+    updateIcons(isNowLight);
+  }
+
+  window.addEventListener('load', () => {
+    if (isLight) updateIcons(true);
+    
+    const mainBtn = document.getElementById('theme-toggle');
+    if (mainBtn) {
+      mainBtn.addEventListener('click', toggleTheme);
+    }
+
+    const dashBtn = document.getElementById('dashboard-theme-toggle');
+    if (dashBtn) {
+      dashBtn.addEventListener('click', toggleTheme);
+    }
+  });
+})();
